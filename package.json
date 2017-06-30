@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --config webpack.config.prod.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,13 +17,14 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.5.2",
     "babel-preset-react": "^6.24.1",
+    "babili-webpack-plugin": "^0.1.2",
     "eslint": "^4.1.1",
     "eslint-config-google": "^0.8.0",
     "eslint-plugin-react": "^7.1.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-transition-group": "^2.0.0-beta.0",
+    "react-router-dom": "^4.1.1",
     "webpack": "^3.0.0"
   }
 }
