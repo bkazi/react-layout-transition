@@ -42,7 +42,7 @@ class Page2 extends React.Component {
 }
 
 ReactDOM.render(
-    <BrowserRouter>
+    <BrowserRouter basename="/react-transition-layout">
         <Route path='/' render={({match, location, ...rest}) => {
             return (
                 <SharedElementTransitionGroup>
