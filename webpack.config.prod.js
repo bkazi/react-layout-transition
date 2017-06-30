@@ -21,5 +21,6 @@ module.exports = {
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
         new BabiliPlugin(),
+        new webpack.optimize.ModuleConcatenationPlugin(),
     ],
 };
