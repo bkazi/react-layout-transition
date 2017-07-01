@@ -12,8 +12,9 @@ These are some great pieces with example code on how to use the native platform 
 
 ## SharedElementTransitionGroup
 
-Currently the only provided transition component (only handles one shared element for now).
-A container around the views to transition between that animates a shared element, based on id, between it's initial and final position.
+Currently the only provided transition component.
+A container around the views to transition between that animates shared elements, between their initial and final position.
+It classifies elements as shared if you mark them with the same id in both the intial and final layout component and does the rest for you.
 
 Check out the following demo at https://bkazi.github.io/react-layout-transition
 
