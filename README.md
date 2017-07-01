@@ -13,6 +13,8 @@ These are some great pieces with example code on how to use the native platform 
 Currently the only provided transition component (not yet ready for use).
 A container around the views to transition between that animates a shared element, based on id, between it's initial and final position.
 
+Check out the following demo at https://bkazi.github.io/react-layout-transition
+
 ![Demo](assets/demo.gif)
 
 ```jsx
