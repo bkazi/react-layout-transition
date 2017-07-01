@@ -1,5 +1,7 @@
 import React from 'react';
 
+import promisifyEventListeners from './utils/promisifyEventListeners';
+
 const childrenToMap = (children) => {
     const childrenArray = React.Children.toArray(children);
     const keyedArray = childrenArray.map((child) => [child.key, child]);
@@ -103,6 +105,23 @@ class SharedElementTransitionGroup extends React.Component {
         }));
     }
 
+    createElementsForTransition(outgoingSharedElements, initialDimensArr) {
+        const newElements = [];
+        outgoingSharedElements.forEach((sharedEl, idx) => {
+            const element = sharedEl.cloneNode();
+            element.style.position = 'fixed';
+            element.style.top = initialDimensArr[idx].top;
+            element.style.left = initialDimensArr[idx].left;
+            element.style.height = initialDimensArr[idx].height;
+            element.style.width = initialDimensArr[idx].width;
+            element.style.transformOrigin = '0 0';
+            element.style.transition = 'transform 300ms ease-in-out';
+            newElements.push(element);
+        });
+
+        return newElements;
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (!this.state.transitionPending) return;
         if (compareChildren(this.state.children, prevState.children)) return;
@@ -116,22 +135,14 @@ class SharedElementTransitionGroup extends React.Component {
         const {initialDimensArr, finalDimensArr} = this.getSharedDimens();
         const allChildren = this.state.children;
 
-        // Currently assumes only one shared element
-        const initialDimens = initialDimensArr[0];
-        const finalDimens = finalDimensArr[0];
-        const sharedEl = outgoingSharedElements[0].cloneNode();
-
-        sharedEl.style.position = 'fixed';
-        sharedEl.style.top = initialDimens.top;
-        sharedEl.style.left = initialDimens.left;
-        sharedEl.style.height = initialDimens.height;
-        sharedEl.style.width = initialDimens.width;
-        sharedEl.style.transformOrigin = '0 0';
-        sharedEl.style.transition = 'transform 300ms ease-in-out';
-
-        sharedEl.addEventListener('transitionend', (event) => {
+        const newElements = this.createElementsForTransition(outgoingSharedElements, initialDimensArr);
+        const promisifiedTransitionEnd = promisifyEventListeners(newElements, 'transitionend');
+        Promise.all(promisifiedTransitionEnd)
+        .then((events) => {
             this.incomingRef.addEventListener('transitionend', () => {
-                event.target.remove();
+                events.forEach((event) => {
+                    event.target.remove();
+                });
                 for (let [key, value] of allChildren.entries()) {
                     let changedChildren = new Map();
                     let element;
@@ -156,17 +167,24 @@ class SharedElementTransitionGroup extends React.Component {
                 incomingShow: true,
             }));
         });
-        this.containerRef.appendChild(sharedEl);
 
-        const widthScaleTransform = finalDimens.width / initialDimens.width;
-        const heightScaleTransform = finalDimens.height / initialDimens.height;
-        const xTranslate = finalDimens.left - initialDimens.left;
-        const yTranslate = finalDimens.top - initialDimens.top;
+        const invert = [];
+
+        newElements.forEach((element, idx) => {
+            this.containerRef.appendChild(element);
+            invert[idx] = {};
+            invert[idx].sx = finalDimensArr[idx].width / initialDimensArr[idx].width;
+            invert[idx].sy = finalDimensArr[idx].height / initialDimensArr[idx].height;
+            invert[idx].x = finalDimensArr[idx].left - initialDimensArr[idx].left;
+            invert[idx].y = finalDimensArr[idx].top - initialDimensArr[idx].top;
+        });
 
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 this.outgoingRef.addEventListener('transitionend', () => {
-                    sharedEl.style.transform = `translate(${xTranslate}px, ${yTranslate}px) scale(${widthScaleTransform}, ${heightScaleTransform})`;
+                    newElements.forEach((element, idx) => {
+                        element.style.transform = `translate(${invert[idx].x}px, ${invert[idx].y}px) scale(${invert[idx].sx}, ${invert[idx].sy})`;
+                    });
                 });
                 this.setState((prevState) => ({
                     ...prevState,
