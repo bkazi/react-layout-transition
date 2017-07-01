@@ -1,10 +1,3 @@
-/*
-[x] Clear up after transition
-[x] Move to events instead of timeouts
-[x] Get dimensions from children
-[x] Find shared elements based on id
-*/
-
 import React from 'react';
 
 const childrenToMap = (children) => {
@@ -119,15 +112,15 @@ class SharedElementTransitionGroup extends React.Component {
             transitionPending: false,
         }));
 
-        this.getSharedElements();
+        const {outgoingSharedElements} = this.getSharedElements();
         const {initialDimensArr, finalDimensArr} = this.getSharedDimens();
         const allChildren = this.state.children;
 
+        // Currently assumes only one shared element
         const initialDimens = initialDimensArr[0];
         const finalDimens = finalDimensArr[0];
+        const sharedEl = outgoingSharedElements[0].cloneNode();
 
-        const sharedEl = document.createElement('img');
-        sharedEl.src = 'https://68.media.tumblr.com/4d1f173744a32bb4b35a2d5d0babff74/tumblr_mnh29fxz111st5lhmo1_1280.jpg';
         sharedEl.style.position = 'fixed';
         sharedEl.style.top = initialDimens.top;
         sharedEl.style.left = initialDimens.left;
