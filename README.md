@@ -19,70 +19,7 @@ Check out the following demo at https://bkazi.github.io/react-layout-transition
 
 ![Demo](assets/demo.gif)
 
-```jsx
-class Example extends Component {
-    state = {
-        switch: true,
-    };
-
-    toggle = () => {
-        this.setState((prevState) => ({
-            switch: !prevState.switch,
-        }));
-    };
-
-    render() {
-        return (
-            <div>
-                <button onClick={this.toggle}>Click Me</button>
-                <SharedElementTransitionGroup>
-                    {this.state.switch && <Page1 />}
-                    {!this.state.switch && <Page2 />}
-                </SharedElementTransitionGroup>
-            </div>
-        );
-    }
-}
-
-class Page1 extends Component {
-    render() {
-        const imgStyle = {
-            width: '50%',
-            height: 'auto',
-            left: '50%',
-        };
-
-        return (
-            <div style={this.props.style} ref={this.props.innerRef}>
-                <p>...</p>
-                <img id="hero" style={imgStyle} src='https://68.media.tumblr.com/4d1f173744a32bb4b35a2d5d0babff74/tumblr_mnh29fxz111st5lhmo1_1280.jpg' />
-                <p>...</p>
-            </div>
-        );
-    }
-}
-
-class Page2 extends React.Component {
-    render() {
-        const imgStyle = {
-            width: '100%',
-            height: 'auto',
-        };
-
-        return (
-            <div style={this.props.style} ref={this.props.innerRef}>
-                <img id="hero" style={imgStyle} src='https://68.media.tumblr.com/4d1f173744a32bb4b35a2d5d0babff74/tumblr_mnh29fxz111st5lhmo1_1280.jpg' />
-                <p>...</p>
-            </div>
-        );
-    }
-}
-
-ReactDOM.render(
-    <Example />,
-    document.getElementById('root')
-);
-```
+You can find the code in the example directory
 
 Please do report any bugs you encounter and point to me any examples and use cases that could be used to improve this
 
