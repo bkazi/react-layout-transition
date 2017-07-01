@@ -8,6 +8,7 @@ class Page1 extends React.Component {
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
+            overflow: 'hidden',
         };
 
         const img1Style = {
