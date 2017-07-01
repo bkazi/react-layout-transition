@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack-dev-server --config ./example/webpack.config.js"
   },
   "author": "Bilal Kazi",
   "license": "MIT",
@@ -20,10 +20,14 @@
     "eslint": "^4.1.1",
     "eslint-config-google": "^0.8.0",
     "eslint-plugin-react": "^7.1.0",
+    "html-webpack-harddisk-plugin": "^0.1.0",
+    "html-webpack-plugin": "^2.29.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-hot-loader": "^3.0.0-beta.7",
     "react-transition-group": "^2.0.0-beta.0",
-    "webpack": "^3.0.0"
+    "webpack": "^3.0.0",
+    "webpack-dev-server": "^2.5.0"
   }
 }
