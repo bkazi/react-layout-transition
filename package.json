@@ -1,5 +1,5 @@
 {
-  "name": "react-shared-element-transition",
+  "name": "react-layout-transition",
   "version": "0.0.1-alpha",
   "description": "Trying to make layout transition in React simple",
   "main": "index.js",
