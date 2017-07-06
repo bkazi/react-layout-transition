@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
     entry: [
+        'babel-polyfill',
         'react-hot-loader/patch',
         path.resolve(__dirname, 'index.js'),
     ],
@@ -21,7 +22,6 @@ module.exports = {
             {
                 test: /\.js$/,
                 use: 'babel-loader',
-                exclude: path.resolve(__dirname, 'node_modules'),
             },
         ],
     },
