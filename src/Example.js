@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SharedElementTransitionGroup from '../SharedElementTransitionGroup';
+import {SharedElementTransitionGroup} from 'react-layout-transition';
 import Page1 from './Page1';
 import Page2 from './Page2';
 
