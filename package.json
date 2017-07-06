@@ -6,6 +6,10 @@
   "scripts": {
     "serve": "webpack-dev-server --config ./example/webpack.config.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bkazi/react-layout-transition.git"
+  },
   "author": "Bilal Kazi",
   "license": "MIT",
   "devDependencies": {
