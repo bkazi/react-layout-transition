@@ -16,7 +16,7 @@ Currently the only provided transition component.
 A container around the views to transition between that animates shared elements, between their initial and final position.
 It classifies elements as shared if you mark them with the same id in both the intial and final layout component and does the rest for you.
 
-Check out the following demo at https://bkazi.github.io/react-layout-transition
+Check out the following demo at https://react-layout-transition.surge.sh/
 
 ![Demo](assets/demo.gif)
 
