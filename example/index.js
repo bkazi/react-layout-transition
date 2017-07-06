@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
@@ -19,11 +18,9 @@ render(AnotherOne);
 
 if (module.hot) {
   // module.hot.accept('./src/Example', () => {
-  //   const NewApp = require('./src/Example').default;
-  //   render(NewApp);
+  //   render(Example);
   // });
   module.hot.accept('./src/AnotherOne', () => {
-    const NewApp = require('./src/AnotherOne').default;
-    render(NewApp);
+    render(AnotherOne);
   });
 }
