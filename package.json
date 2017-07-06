@@ -1,10 +1,10 @@
 {
   "name": "react-shared-element-transition",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1-alpha",
+  "description": "Trying to make layout transition in React simple",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config ./example/webpack.config.js"
+    "serve": "webpack-dev-server --config ./example/webpack.config.js"
   },
   "author": "Bilal Kazi",
   "license": "MIT",
