@@ -1,0 +1,15 @@
+language: node_js
+branches:
+  - master
+  - gh-pages
+cache:
+  directories:
+    - "node_modules"
+before_deploy: npm run build
+deploy:
+  provider: surge
+  project: ./dist/
+  domain: react-transition-layout.surge.sh
+  skip_cleanup: true
+  on: 
+    branch: gh-pages
