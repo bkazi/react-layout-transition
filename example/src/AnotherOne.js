@@ -45,10 +45,4 @@ class AnotherOne extends LayoutTransitionGroup {
     }
 }
 
-// const LayoutWrapper = (props) => {
-//     return (
-        
-//     );
-// };
-
 export default AnotherOne;
