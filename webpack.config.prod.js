@@ -18,6 +18,11 @@ module.exports = {
             {
                 test: /.js$/,
                 use: 'babel-loader',
+                include: [
+                    path.resolve(__dirname, 'node_modules/react-layout-transition'),
+                    path.resolve(__dirname, './src'),
+                    path.resolve(__dirname, 'index.prod.js'),
+                ],
             },
         ],
     },

@@ -1,10 +1,10 @@
 import React from 'react';
-
 import {SharedElementTransitionGroup} from 'react-layout-transition';
+
 import Page1 from './Page1';
 import Page2 from './Page2';
 
-class Example extends React.Component {
+class SharedElementExample extends React.Component {
     state = {
         switch: true,
     };
@@ -28,4 +28,4 @@ class Example extends React.Component {
     }
 }
 
-export default Example;
+export default SharedElementExample;
