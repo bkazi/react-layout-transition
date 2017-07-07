@@ -8,19 +8,31 @@ These are some great pieces with example code on how to use the native platform 
 - [React Native’s LayoutAnimation is Awesome](https://medium.com/@Jpoliachik/react-native-s-layoutanimation-is-awesome-4a4d317afd3e) - Justin Poliachik (Medium)
 - [Animate all the Things. Transitions in Android](https://medium.com/@andkulikov/animate-all-the-things-transitions-in-android-914af5477d50) - Andrey Kulikov (Medium)
 
-**Note:** This is a very early implementation so do expect loads of bugs (but also be sure to report them)
+**Note:** This is a very early implementation so do expect loads of bugs and missing features (but also be sure to report them)
 
 ## SharedElementTransitionGroup
 
-Currently the only provided transition component.
 A container around the views to transition between that animates shared elements, between their initial and final position.
 It classifies elements as shared if you mark them with the same id in both the intial and final layout component and does the rest for you.
 
-Check out the following demo at https://react-layout-transition.surge.sh/
+Check out the following demo at [https://react-layout-transition.surge.sh/](https://react-layout-transition.surge.sh)
 
-![Demo](assets/demo.gif)
+![SharedElementDemo](assets/demoGifs/sharedElementDemo.gif)
 
-You can find the code in the example directory
+## LayoutTransitionGroup
+
+A component that animates state based changes in layout in certain parts of your view.
+Currently this is only tested on adding elements as displayed by the GIF below
+
+![LayoutTransitionDemo](assets/demoGifs/layoutTransitionDemo.gif)
+
+You can find the code for the above demos in the example directory
+
+## Usage
+
+`npm install --save react-layout-transition`
+
+This currently requires babel transpilation as the library does not ship any processed code for now
 
 Please do report any bugs you encounter and point to me any examples and use cases that could be used to improve this
 
