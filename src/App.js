@@ -1,13 +1,14 @@
 import React from 'react';
 
 import SharedElementExample from './SharedElementExample';
+import Logo from '../assets/logo.svg';
 
 class App extends React.Component {
     render() {
         return (
             <div>
                 <div className='main-header'>
-                    <img className='main-header__img' src='assets/logo.svg' />
+                    <img className='main-header__img' src={Logo} />
                     <h1 className='main-header__title'>React Layout Transition</h1>
                     <p className='main-header__desc'>Trying to make layout transitions simple</p>
                     <span><a className='main-header__link' href='https://github.com/bkazi/react-layout-transition'>Github</a></span>
