@@ -1,28 +1,33 @@
 import React from 'react';
-import {SharedElementTransitionGroup} from 'react-layout-transition';
+import {
+  LiveProvider,
+  LiveEditor,
+  LivePreview,
+} from 'react-live';
 
-import Page1 from './Page1';
-import Page2 from './Page2';
+import {SharedElementTransitionGroup} from 'react-layout-transition';
+import {codeString as demoCodeString} from './Demo';
+
+const codeString = `${demoCodeString}
+
+render(Demo);
+`;
 
 class SharedElementExample extends React.Component {
-    state = {
-        switch: true,
-    };
-
-    toggle = () => {
-        this.setState((prevState) => ({
-            switch: !prevState.switch,
-        }));
-    };
-
     render() {
         return (
-            <div>
-                <button onClick={this.toggle}>Click Me</button>
-                <SharedElementTransitionGroup>
-                    {this.state.switch && <Page1 />}
-                    {!this.state.switch && <Page2 />}
-                </SharedElementTransitionGroup>
+            <div className='example-container'>
+                <h2>Shared Element Transition</h2>
+                <LiveProvider
+                    noInline={true}
+                    scope={{SharedElementTransitionGroup}}
+                    code={codeString}
+                >
+                    <div className='example'>
+                        <LiveEditor className='example__code'/>
+                        <LivePreview className='example__display'/>
+                    </div>
+                </LiveProvider>
             </div>
         );
     }
