@@ -7,7 +7,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: {
-        vendor: ['react', 'react-dom'],
+        vendor: ['react', 'react-dom', 'react-live'],
         main: path.resolve(__dirname, 'index.prod.js'),
     },
     output: {
