@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const BabiliPlugin = require('babili-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InlineManifestPlugin = require('inline-manifest-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -24,6 +25,18 @@ module.exports = {
                     path.resolve(__dirname, 'index.prod.js'),
                 ],
             },
+            {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: {
+                        loader: 'css-loader',
+                        options: {
+                            minimize: true,
+                        },
+                    },
+                }),
+            },
         ],
     },
     plugins: [
@@ -36,6 +49,7 @@ module.exports = {
             minChunks: Infinity,
         }),
         new webpack.optimize.ModuleConcatenationPlugin(),
+        new ExtractTextPlugin('[name].[contenthash].css'),
         new InlineManifestPlugin({
             name: 'webpackManifest',
         }),
