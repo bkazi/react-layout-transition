@@ -1,4 +1,4 @@
-![Logo](assets/logo.svg)
+![Logo](assets/logo.png)
 # react-layout-transition
 Trying to make layout transitions simple
 
