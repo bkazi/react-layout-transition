@@ -1,6 +1,6 @@
 {
   "name": "react-layout-transition",
-  "version": "0.0.1-alpha",
+  "version": "0.0.1-alpha.1",
   "description": "Trying to make layout transition in React simple",
   "main": "index.js",
   "scripts": {
