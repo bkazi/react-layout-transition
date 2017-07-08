@@ -110,8 +110,8 @@ class SharedElementTransitionGroup extends React.Component {
         outgoingSharedElements.forEach((sharedEl, idx) => {
             const element = sharedEl.cloneNode();
             element.style.position = 'absolute';
-            element.style.top = initialDimensArr[idx].top;
-            element.style.left = initialDimensArr[idx].left;
+            element.style.top = initialDimensArr[idx].top + window.scrollY;
+            element.style.left = initialDimensArr[idx].left + window.scrollX;
             element.style.height = initialDimensArr[idx].height;
             element.style.width = initialDimensArr[idx].width;
             element.style.transformOrigin = '0 0';
