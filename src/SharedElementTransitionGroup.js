@@ -1,6 +1,6 @@
 import React from 'react';
 
-import promisifyEventListeners from './utils/promisifyEventListeners';
+import promisifyEventListeners from '../utils/promisifyEventListeners';
 
 const childrenToMap = (children) => {
     const childrenArray = React.Children.toArray(children);

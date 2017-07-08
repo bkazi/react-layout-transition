@@ -1,6 +1,6 @@
 import React from 'react';
 
-import promisifyEventListeners from './utils/promisifyEventListeners.js';
+import promisifyEventListeners from '../utils/promisifyEventListeners.js';
 
 class LayoutTransitionGroup extends React.Component {
     state = {

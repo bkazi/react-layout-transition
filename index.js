@@ -1,5 +1,5 @@
-import SharedElementTransitionGroup from './SharedElementTransitionGroup.js';
-import LayoutTransitionGroup from './LayoutTransitionGroup.js';
+import SharedElementTransitionGroup from './src/SharedElementTransitionGroup.js';
+import LayoutTransitionGroup from './src/LayoutTransitionGroup.js';
 
 export {
     SharedElementTransitionGroup,
