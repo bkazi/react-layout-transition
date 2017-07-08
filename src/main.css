@@ -1,10 +1,11 @@
 * {
     box-sizing: border-box;
-    font-family: "Roboto", sans-serif;
 }
 
 body {
     margin: 0;
+    line-height: 1.6;
+    font-family: "Open Sans", sans-serif;
 }
 
 :root {
@@ -13,12 +14,13 @@ body {
 }
 
 h1, h2, h3, h4, h5, a {
-    font-family: "Space Mono", monospace;
+    font-family: "Source Code Pro", monospace;
 }
 
 .container {
     margin: 0 auto;
     max-width: 800px;
+    padding: 16px;
 }
 
 .main-header {
@@ -91,7 +93,7 @@ h1, h2, h3, h4, h5, a {
     color: #FFF;
 }
 
-.horizontalFlex {
+.horizontal-flex {
     display: flex;
     flex-direction: row;
     flex-flow: row wrap;
@@ -99,6 +101,15 @@ h1, h2, h3, h4, h5, a {
     align-items: center;
     width: 100%;
     overflow: hidden;
+}
+
+.vertical-flex {
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .example-image {
@@ -110,4 +121,51 @@ h1, h2, h3, h4, h5, a {
 .example-image2 {
     width: 100%;
     height: auto;
+}
+
+.example-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.example {
+    --max-height: 600px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.4);
+}
+
+.example__code {
+    width: 50%;
+    max-height: var(--max-height);
+    overflow: scroll;
+    padding: 8px;
+    font-family: "Source Code Pro", monospace;
+    font-size: 0.875em;
+}
+
+.example__display {
+    width: 50%;
+    height: 100%;
+    max-height: var(--max-height);
+    padding: 8px;
+    overflow: scroll;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 56px;
+    margin-top: 16px;
+    color: #FFF;
+    background: linear-gradient(-65deg, var(--primary-color), var(--accent-color));
+}
+
+.footer a {
+    color: #FFF;
 }
