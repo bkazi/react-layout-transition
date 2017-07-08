@@ -21,8 +21,8 @@ class App extends React.Component {
                             Inspired by existing solutions on native platforms, it hopes to bring similar functionality and ease to the web.
                         </p>
                     </div>
+                    <SharedElementExample />
                 </div>
-                <SharedElementExample />
             </div>
         );
     }

@@ -94,6 +94,7 @@ h1, h2, h3, h4, h5, a {
 .horizontalFlex {
     display: flex;
     flex-direction: row;
+    flex-flow: row wrap;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -101,6 +102,12 @@ h1, h2, h3, h4, h5, a {
 }
 
 .example-image {
+    flex: auto;
+    width: 50%;
+    height: auto;
+}
+
+.example-image2 {
     width: 100%;
     height: auto;
 }
