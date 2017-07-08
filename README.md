@@ -1,6 +1,9 @@
-![Logo](assets/logo.png)
 # react-layout-transition
+
+![Logo](assets/logo.png)
 Trying to make layout transitions simple
+
+Check it out at [https://react-layout-transition.surge.sh/](https://react-layout-transition.surge.sh)
 
 This project aims to provide React components that can :sparkles:_automagically_:sparkles: animate between changes in your layout.
 Inspired by existing solutions on native platforms, it hopes to bring similar functionality and ease to the web.
@@ -15,8 +18,6 @@ These are some great pieces with example code on how to use the native platform 
 
 A container around the views to transition between that animates shared elements, between their initial and final position.
 It classifies elements as shared if you mark them with the same id in both the intial and final layout component and does the rest for you.
-
-Check out the following demo at [https://react-layout-transition.surge.sh/](https://react-layout-transition.surge.sh)
 
 ![SharedElementDemo](assets/demoGifs/sharedElementDemo.gif)
 
