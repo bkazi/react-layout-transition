@@ -14,6 +14,12 @@ These are some great pieces with example code on how to use the native platform 
 
 **Note:** This is a very early implementation so do expect loads of bugs and missing features (but also be sure to report them)
 
+## Usage
+
+`npm install --save react-layout-transition`
+
+This currently requires babel transpilation as the library does not ship any processed code for now
+
 ## SharedElementTransitionGroup
 
 A container around the views to transition between that animates shared elements, between their initial and final position.
@@ -157,12 +163,6 @@ class Demo extends LayoutTransitionGroup {
 ```
 
 You can find the code for the above demos in the example directory
-
-## Usage
-
-`npm install --save react-layout-transition`
-
-This currently requires babel transpilation as the library does not ship any processed code for now
 
 Please do report any bugs you encounter and point to me any examples and use cases that could be used to improve this
 
