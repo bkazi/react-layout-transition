@@ -2,7 +2,7 @@
   "presets": [
     ["env", {
       "targets": {
-        "browsers": ["last 3 versions", "not ie < 11"]
+        "browsers": ["> 5%"]
       },
       "modules": false,
       "useBuiltIns": true
@@ -12,6 +12,7 @@
   "plugins": [
       "transform-class-properties",
       "transform-object-rest-spread",
-      "transform-es2015-classes"
+      "transform-es2015-classes",
+      "react-hot-loader/babel"
   ]
 }
