@@ -12,12 +12,12 @@ class Page1 extends React.Component {
         };
 
         const img1Style = {
-            maxWidth: '100%',
+            maxWidth: '50%',
             height: 'auto',
         };
 
         const img2Style = {
-            maxWidth: '100%',
+            maxWidth: '50%',
             height: 'auto',
         };
 
