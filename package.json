@@ -2,9 +2,10 @@
   "name": "react-layout-transition",
   "version": "0.0.1-alpha.2",
   "description": "Trying to make layout transition in React simple",
-  "main": "index.js",
+  "main": "dist/react-layout-transition.js",
   "scripts": {
-    "serve": "webpack-dev-server --config ./example/webpack.config.js"
+    "serve": "webpack-dev-server --config ./example/webpack.config.js",
+    "build": "webpack --config ./webpack.config.js"
   },
   "repository": {
     "type": "git",
