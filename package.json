@@ -2,11 +2,20 @@
   "name": "react-layout-transition",
   "version": "0.0.1-alpha.2",
   "description": "Trying to make layout transition in React simple",
-  "main": "dist/react-layout-transition.js",
+  "main": "lib/index.js",
+  "module": "dist/react-layout-transition.es.js",
+  "js:next": "dist/react-layout-transition.es.js",
   "scripts": {
     "serve": "webpack-dev-server --config ./example/webpack.config.js",
-    "build": "webpack --config ./webpack.config.js"
+    "build": "npm-run-all --parallel build:*",
+    "build:dist": "rollup -c && rollup -c --environment PRODUCTION",
+    "build:lib": "babel src utils --out-dir lib"
   },
+  "files": [
+    "src",
+    "dist",
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/bkazi/react-layout-transition.git"
@@ -14,9 +23,11 @@
   "author": "Bilal Kazi",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.1",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-polyfill": "^6.23.0",
@@ -25,13 +36,17 @@
     "eslint": "^4.1.1",
     "eslint-config-google": "^0.8.1",
     "eslint-plugin-react": "^7.1.0",
-    "html-webpack-harddisk-plugin": "^0.1.0",
     "html-webpack-plugin": "^2.29.0",
+    "npm-run-all": "^4.0.2",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-hot-loader": "^3.0.0-beta.7",
-    "react-transition-group": "^2.0.0-beta.0",
+    "rollup": "^0.43.0",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^1.1.1",
+    "rollup-plugin-uglify": "^2.0.1",
     "webpack": "^3.1.0",
     "webpack-dev-server": "^2.5.1"
   }
