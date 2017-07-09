@@ -110,8 +110,8 @@ class SharedElementTransitionGroup extends React.Component {
         outgoingSharedElements.forEach((sharedEl, idx) => {
             const element = sharedEl.cloneNode();
             element.style.position = 'absolute';
-            element.style.top = initialDimensArr[idx].top + window.scrollY;
-            element.style.left = initialDimensArr[idx].left + window.scrollX;
+            element.style.top = initialDimensArr[idx].top + window.scrollY - this.containerRef.offsetTop;
+            element.style.left = initialDimensArr[idx].left + window.scrollX - this.containerRef.offsetLeft;
             element.style.height = initialDimensArr[idx].height;
             element.style.width = initialDimensArr[idx].width;
             element.style.transformOrigin = '0 0';
@@ -171,7 +171,7 @@ class SharedElementTransitionGroup extends React.Component {
         const invert = [];
 
         newElements.forEach((element, idx) => {
-            document.body.appendChild(element);
+            this.containerRef.appendChild(element);
             invert[idx] = {};
             invert[idx].sx = finalDimensArr[idx].width / initialDimensArr[idx].width;
             invert[idx].sy = finalDimensArr[idx].height / initialDimensArr[idx].height;
@@ -220,7 +220,12 @@ class SharedElementTransitionGroup extends React.Component {
         };
 
         return (
-            <div style={containerStyles}>
+            <div
+                ref={(ref) => {
+                    this.containerRef = ref;
+                }}
+                style={containerStyles}
+            >
                 {Array.from(this.state.children.values()).map((child) => {
                     if (child.props.outgoing) {
                         return React.cloneElement(child, {style: outgoingStyles});
