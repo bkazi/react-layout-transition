@@ -39,7 +39,6 @@ const plugins = [
                     browsers: ['last 3 versions', 'not ie < 11'],
                 },
                 modules: false,
-                loose: true,
                 useBuiltIns: true,
             }],
             'react',

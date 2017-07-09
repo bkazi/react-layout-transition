@@ -4,7 +4,6 @@
       "targets": {
         "browsers": ["last 3 versions", "not ie < 11"]
       },
-      "loose": true,
       "useBuiltIns": true
     }],
     "react"
