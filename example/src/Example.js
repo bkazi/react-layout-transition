@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {SharedElementTransitionGroup} from '../../index.js';
+import {SharedElementTransitionGroup} from '../../src/index.js';
 import Page1 from './Page1';
 import Page2 from './Page2';
 
