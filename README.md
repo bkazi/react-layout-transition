@@ -16,9 +16,17 @@ These are some great pieces with example code on how to use the native platform 
 
 ## Usage
 
-`npm install --save react-layout-transition`
+react-layout-transition is available on the npm registry and can be installed via npm/yarn
 
-This currently requires babel transpilation as the library does not ship any processed code for now
+```bash
+npm install --save react-layout-transition
+```
+
+You can also include it directly in the browser via the [unpkg CDN](https://unpkg.com)
+
+```html
+<script src='https://unpkg.com/react-layout-transition/dist/react-layout-transition.min.js'></script>
+```
 
 ## SharedElementTransitionGroup
 
