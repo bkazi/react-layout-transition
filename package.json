@@ -37,7 +37,7 @@
   "dependencies": {
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-layout-transition": "0.0.1-alpha.3",
+    "react-layout-transition": "0.0.1-alpha.4",
     "react-live": "^1.7.0"
   }
 }
