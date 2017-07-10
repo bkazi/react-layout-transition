@@ -14,6 +14,7 @@
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.1",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-polyfill": "^6.23.0",
@@ -33,12 +34,14 @@
     "react-hot-loader": "^3.0.0-beta.7",
     "style-loader": "^0.18.2",
     "webpack": "^3.1.0",
+    "webpack-bundle-analyzer": "^2.8.2",
     "webpack-dev-server": "^2.5.1"
   },
   "dependencies": {
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-layout-transition": "0.0.1-alpha.4",
-    "react-live": "^1.7.0"
+    "react-live": "^1.7.0",
+    "react-loadable": "^4.0.3"
   }
 }

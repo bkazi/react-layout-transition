@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'source-map',
     entry: [
         'babel-polyfill',
         'react-hot-loader/patch',
@@ -23,11 +23,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 use: 'babel-loader',
-                include: [
-                    path.resolve(__dirname, 'node_modules/react-layout-transition'),
-                    path.resolve(__dirname, './src'),
-                    path.resolve(__dirname, 'index.js'),
-                ],
+                exclude: path.resolve(__dirname, 'node_modules'),
             },
             {
                 test: /\.css$/,

@@ -13,6 +13,7 @@
       "transform-class-properties",
       "transform-object-rest-spread",
       "transform-es2015-classes",
-      "react-hot-loader/babel"
+      "react-hot-loader/babel",
+      "syntax-dynamic-import"
   ]
 }

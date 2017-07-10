@@ -1,9 +1,24 @@
 import React from 'react';
+import Loadable from 'react-loadable';
 
 import Header from './Header';
-import SharedElementExample from './SharedElementExample';
-import LayoutTransitionExample from './LayoutTransitionExample';
 import Footer from './Footer';
+
+const LoadingComponent = () => {
+    return (
+        <div>Loading</div>
+    );
+};
+
+const LoadableSharedElExample = Loadable({
+    loader: () => import(/* webpackChunkName: 'SharedElementExample' */ './SharedElementExample'),
+    loading: LoadingComponent,
+});
+
+const LoadableLayoutTransitionExample = Loadable({
+    loader: () => import(/* webpackChunkName: 'LayoutTransitionExample' */ './LayoutTransitionExample'),
+    loading: LoadingComponent,
+});
 
 class App extends React.Component {
     render() {
@@ -19,8 +34,8 @@ class App extends React.Component {
                         </p>
                     </div>
                 </div>
-                <SharedElementExample />
-                <LayoutTransitionExample />
+                <LoadableSharedElExample />
+                <LoadableLayoutTransitionExample />
                 <Footer />
             </div>
         );

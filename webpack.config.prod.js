@@ -8,12 +8,13 @@ const PrepackPlugin = require('prepack-webpack-plugin').default;
 
 module.exports = {
     entry: {
-        vendor: ['react', 'react-dom'],
+        vendor: ['react', 'react-dom', 'react-live', 'react-loadable'],
         main: path.resolve(__dirname, 'index.prod.js'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].[chunkhash].js',
+        chunkFilename: '[name].[chunkhash].js',
     },
     module: {
         rules: [
@@ -35,6 +36,7 @@ module.exports = {
                         plugins: [
                             'transform-class-properties',
                             'transform-object-rest-spread',
+                            'syntax-dynamic-import',
                         ],
                     },
                 },
@@ -75,6 +77,10 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({
             name: ['vendor', 'manifest'],
             minChunks: Infinity,
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            async: true,
+            children: true,
         }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin('[name].[contenthash].css'),
