@@ -2,7 +2,6 @@ import React from 'react';
 import {
   LiveProvider,
   LiveEditor,
-  LiveError,
   LivePreview,
 } from 'react-live';
 
@@ -26,7 +25,6 @@ class LayoutTransitionExample extends React.Component {
                     <div className='example'>
                         <LiveEditor className='example__code'/>
                         <LivePreview className='example__display'/>
-                        <LiveError />
                     </div>
                 </LiveProvider>
             </div>
