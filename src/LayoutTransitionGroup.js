@@ -7,12 +7,13 @@ class LayoutTransitionGroup extends React.Component {
     finalDimens = new Map();
     state = {
         _transitionPending: false,
-        _transitionRef: undefined,
+        _transitionRefs: undefined,
     }
 
-    beginTransition = (ref, stateUpdateFn) => {
+    beginTransition = (stateUpdateFn, refs) => {
+        if (refs.constructor !== Array) refs = [refs];
         // Traverse top layers for inital positions
-        const childNodes = Array.from(ref.childNodes);
+        const childNodes = [].concat(...refs.map((ref) => Array.from(ref.childNodes)));
         childNodes.forEach((child, index) => {
             // mark initial elements with unique keys to track
             const key = `.${index}`;
@@ -25,7 +26,7 @@ class LayoutTransitionGroup extends React.Component {
         this.setState((prevState) => ({
             ...stateUpdateFn(prevState),
             _transitionPending: true,
-            _transitionRef: ref,
+            _transitionRefs: refs,
         }));
     };
 
@@ -33,7 +34,8 @@ class LayoutTransitionGroup extends React.Component {
         if (!this.state._transitionPending) return;
 
         // Traverse top layer for final positions
-        const childNodes = Array.from(this.state._transitionRef.childNodes);
+        const refs = this.state._transitionRefs;
+        const childNodes = [].concat(...refs.map((ref) => Array.from(ref.childNodes)));
         childNodes.forEach((child) => {
             if (!child.dataset.layoutKey) return;
             this.finalDimens.set(child.dataset.layoutKey, child.getBoundingClientRect());
@@ -89,7 +91,7 @@ class LayoutTransitionGroup extends React.Component {
 
         this.setState((state) => ({
             _transitionPending: false,
-            _transitionRef: undefined,
+            _transitionRefs: undefined,
             _transitionInitialDimens: undefined,
         }));
     }
