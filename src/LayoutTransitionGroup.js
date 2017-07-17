@@ -3,7 +3,7 @@ import React from 'react';
 import promisifyEventListeners from './utils/promisifyEventListeners.js';
 
 class LayoutTransitionGroup extends React.Component {
-    intitialDimens = new Map();
+    initialDimens = new Map();
     finalDimens = new Map();
     state = {
         _transitionPending: false,
@@ -18,7 +18,7 @@ class LayoutTransitionGroup extends React.Component {
             const key = `.${index}`;
             child.setAttribute('data-layout-key', key);
 
-            this.intitialDimens.set(key, child.getBoundingClientRect());
+            this.initialDimens.set(key, child.getBoundingClientRect());
         });
 
         // Update state
@@ -47,7 +47,7 @@ class LayoutTransitionGroup extends React.Component {
                 child.style.pointerEvents = 'none';
                 return;
             };
-            const initialDimen = this.intitialDimens.get(key);
+            const initialDimen = this.initialDimens.get(key);
             const finalDimen = this.finalDimens.get(key);
             const x = initialDimen.left - finalDimen.left;
             const y = initialDimen.top - finalDimen.top;
