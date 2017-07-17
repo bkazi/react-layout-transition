@@ -12,6 +12,13 @@ class AnotherOne extends LayoutTransitionGroup {
         }));
     };
 
+    decrement = () => {
+        this.beginTransition(this.listRef, (prevState) => {
+            if (prevState.count === 0) return;
+            else return {count: prevState.count - 1};
+        });
+    };
+
     render() {
         const linearStyle = {
             minHeight: '100%',
@@ -31,7 +38,8 @@ class AnotherOne extends LayoutTransitionGroup {
 
         return (
             <div>
-                <button onClick={this.increment}>Click Me</button>
+                <button onClick={this.increment}>Increment</button>
+                <button onClick={this.decrement}>Decrement</button>
                 <div 
                     style={linearStyle}
                     ref={(ref) => {
