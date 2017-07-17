@@ -1,6 +1,6 @@
 import React from 'react';
 
-import promisifyEventListeners from './utils/promisifyEventListeners.js';
+import fireOnce from './utils/fireOnce.js';
 
 class LayoutTransitionGroup extends React.Component {
     initialDimens = new Map();
@@ -73,9 +73,7 @@ class LayoutTransitionGroup extends React.Component {
                     child.style.transform = '';
                     initialNodes.push(child);
                 });
-                const promisifiedTransitionEnd = promisifyEventListeners(initialNodes, 'transitionend');
-                Promise.all(promisifiedTransitionEnd)
-                .then(() => {
+                fireOnce(initialNodes, 'transitionend', () => {
                     initialNodes.forEach((child) => {
                         child.style.transition = '';
                         child.removeAttribute('data-layout-key');

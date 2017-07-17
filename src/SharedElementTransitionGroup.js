@@ -1,6 +1,6 @@
 import React from 'react';
 
-import promisifyEventListeners from './utils/promisifyEventListeners';
+import fireOnce from './utils/fireOnce.js';
 
 const childrenToMap = (children) => {
     const childrenArray = React.Children.toArray(children);
@@ -136,9 +136,7 @@ class SharedElementTransitionGroup extends React.Component {
         const allChildren = this.state.children;
 
         const newElements = this.createElementsForTransition(outgoingSharedElements, initialDimensArr);
-        const promisifiedTransitionEnd = promisifyEventListeners(newElements, 'transitionend');
-        Promise.all(promisifiedTransitionEnd)
-        .then((events) => {
+        fireOnce(newElements, 'transitionend', (events) => {
             this.incomingRef.addEventListener('transitionend', () => {
                 events.forEach((event) => {
                     event.target.remove();
