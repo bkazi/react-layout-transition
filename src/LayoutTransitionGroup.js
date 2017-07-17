@@ -3,16 +3,23 @@ import React from 'react';
 import promisifyEventListeners from './utils/promisifyEventListeners.js';
 
 class LayoutTransitionGroup extends React.Component {
+    intitialDimens = new Map();
+    finalDimens = new Map();
     state = {
         _transitionPending: false,
         _transitionRef: undefined,
-        _transitionInitialDimens: undefined,
     }
 
     beginTransition = (ref, stateUpdateFn) => {
         // Traverse top layers for inital positions
         const childNodes = Array.from(ref.childNodes);
-        this.intitialDimens = childNodes.map((child) => child.getBoundingClientRect());
+        childNodes.forEach((child, index) => {
+            // mark initial elements with unique keys to track
+            const key = `.${index}`;
+            child.setAttribute('data-layout-key', key);
+
+            this.intitialDimens.set(key, child.getBoundingClientRect());
+        });
 
         // Update state
         this.setState((prevState) => ({
@@ -27,19 +34,25 @@ class LayoutTransitionGroup extends React.Component {
 
         // Traverse top layer for final positions
         const childNodes = Array.from(this.state._transitionRef.childNodes);
-        this.finalDimens = childNodes.map((child) => child.getBoundingClientRect());
+        childNodes.forEach((child) => {
+            if (!child.dataset.layoutKey) return;
+            this.finalDimens.set(child.dataset.layoutKey, child.getBoundingClientRect());
+        });
 
         // Fix existing nodes in same place
         childNodes.forEach((child, i) => {
-            if (!this.intitialDimens[i]) {
+            const key = child.dataset.layoutKey;
+            if (!key) {
                 child.style.opacity = 0;
                 child.style.pointerEvents = 'none';
                 return;
             };
-            const x = this.intitialDimens[i].left - this.finalDimens[i].left;
-            const y = this.intitialDimens[i].top - this.finalDimens[i].top;
-            const sx = this.intitialDimens[i].width / this.finalDimens[i].width;
-            const sy = this.intitialDimens[i].height / this.finalDimens[i].height;
+            const initialDimen = this.intitialDimens.get(key);
+            const finalDimen = this.finalDimens.get(key);
+            const x = initialDimen.left - finalDimen.left;
+            const y = initialDimen.top - finalDimen.top;
+            const sx = initialDimen.width / finalDimen.width;
+            const sy = initialDimen.height / finalDimen.height;
             child.style.transition = '';
             child.style.transform = `translate(${x}px, ${y}px) scale(${sx}, ${sy})`;
             child.style.transformOrigin = '0 0';
@@ -52,7 +65,7 @@ class LayoutTransitionGroup extends React.Component {
                 const initialNodes = [];
                 const newNodes = [];
                 childNodes.forEach((child, i) => {
-                    if (!this.intitialDimens[i]) {
+                    if (!child.dataset.layoutKey) {
                         newNodes.push(child);
                         return;
                     }
@@ -65,6 +78,7 @@ class LayoutTransitionGroup extends React.Component {
                 .then(() => {
                     initialNodes.forEach((child) => {
                         child.style.transition = '';
+                        child.removeAttribute('data-layout-key');
                     });
                     newNodes.forEach((child) => {
                         child.style.transition = 'opacity 200ms ease-in-out';
