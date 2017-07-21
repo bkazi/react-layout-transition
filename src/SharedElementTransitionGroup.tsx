@@ -4,22 +4,22 @@ import fireOnce from './utils/fireOnce';
 import {childrenToMap, compareChildren} from './utils/children';
 
 export interface SharedElementTransitionGroupProps {
-    children: React.ReactChild,
+    children?: any,
 }
 
 export interface SharedElementTransitionGroupState {
     outgoingShow: boolean,
     incomingShow: boolean,
-    children: Map<string, React.ReactChild>,
+    children: Map<string, React.ReactElement<any>>,
     transitionPending: boolean,
 }
 
 class SharedElementTransitionGroup extends React.Component<SharedElementTransitionGroupProps, SharedElementTransitionGroupState> {
-    outgoingSharedElements: Array<Element>
-    outgoingRef?: HTMLElement
-    incomingSharedElements: Array<Element>;
+    outgoingSharedElements: Array<Element> = [];
+    outgoingRef?: HTMLElement;
+    incomingSharedElements: Array<Element> = [];
     incomingRef?: HTMLElement;
-    containerRef: HTMLElement;
+    containerRef: HTMLDivElement;
     
     constructor(props) {
         super();
@@ -36,7 +36,7 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
         outgoingSharedElements?: Array<Element>,
         incomingSharedElements?: Array<Element>,
     } => {
-        if (this.outgoingSharedElements && this.incomingSharedElements) {
+        if (this.outgoingSharedElements.length && this.incomingSharedElements.length) {
             return {
                 outgoingSharedElements: this.outgoingSharedElements,
                 incomingSharedElements: this.incomingSharedElements
@@ -83,7 +83,7 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
         const prevChildren = this.state.children;
         const newChildren = childrenToMap(nextProps.children);
 
-        const allChildren: Map<string, React.ReactChild> = new Map([
+        const allChildren: Map<string, React.ReactElement<any>> = new Map([
             ...Array.from(prevChildren),
             ...Array.from(newChildren)
         ]);
@@ -163,7 +163,7 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
                 events.forEach((event) => {
                     event.target.remove();
                 });
-                for (let [key, value] of allChildren.entries()) {
+                for (let [key, value] of Array.from(allChildren.entries())) {
                     let changedChildren = new Map();
                     let element;
                     if (value.props.incoming) {
@@ -197,6 +197,12 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
 
         newElements.forEach((element, idx) => {
             this.containerRef.appendChild(element);
+            invert[idx] = {
+                sx: 1,
+                sy: 1,
+                x: 0,
+                y: 0,
+            }
             invert[idx].sx = finalDimensArr[idx].width / initialDimensArr[idx].width;
             invert[idx].sy = finalDimensArr[idx].height / initialDimensArr[idx].height;
             invert[idx].x = finalDimensArr[idx].left - initialDimensArr[idx].left;
@@ -242,12 +248,12 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
             position: 'absolute',
         };
         const containerStyles = {
-            position: 'relative',
+            position: 'relative' as 'relative',
         };
 
         return (
             <div
-                ref={(ref) => {
+                ref={(ref: HTMLDivElement) => {
                     this.containerRef = ref;
                 }}
                 style={containerStyles}
