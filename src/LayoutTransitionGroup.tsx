@@ -1,8 +1,15 @@
-import React from 'react';
+import * as React from 'react';
 
 import fireOnce from './utils/fireOnce';
 
-class LayoutTransitionGroup extends React.Component {
+export interface LayoutTransitionGroupState {
+    _lTransitionPending: boolean,
+    _lTransitionRefs?: HTMLElement,
+    _lTransitionTiming?: number,
+    _lTransitionEasing?: string,
+}
+
+class LayoutTransitionGroup extends React.Component<{}, LayoutTransitionGroupState> {
     _lInitialDimens = new Map();
     _lfinalDimens = new Map();
     state = {
@@ -12,8 +19,8 @@ class LayoutTransitionGroup extends React.Component {
         _lTransitionEasing: undefined,
     }
 
-    beginTransition = (stateUpdateFn, refs, timing = 200, easing = 'ease-in-out') => {
-        if (refs.constructor !== Array) refs = [refs];
+    beginTransition = (stateUpdateFn: Function, refs: HTMLElement[] | HTMLElement, timing= 200, easing = 'ease-in-out') => {
+        if (!(refs instanceof Array)) refs = [refs];
         // Traverse top layers for inital positions
         const childNodes = [].concat(...refs.map((ref) => Array.from(ref.childNodes)));
         childNodes.forEach((child, index) => {
