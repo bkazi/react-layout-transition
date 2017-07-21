@@ -20,11 +20,19 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.jsx|js$/,
                 use: 'babel-loader',
                 exclude: path.resolve(__dirname, 'node_modules'),
             },
+            {
+                test: /\.tsx|ts?$/,
+                loader: 'awesome-typescript-loader',
+                exclude: path.resolve(__dirname, 'node_modules'),
+            },
         ],
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
