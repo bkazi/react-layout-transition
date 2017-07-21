@@ -1,6 +1,6 @@
 import React from 'react';
 
-import fireOnce from './utils/fireOnce.js';
+import fireOnce from './utils/fireOnce';
 
 class LayoutTransitionGroup extends React.Component {
     _lInitialDimens = new Map();
