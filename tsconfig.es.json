@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "removeComments": true,
+        "jsx": "react",
+        "target": "es2015",
+        "outDir": "es",
+        "pretty": true,
+        "noEmitOnError": true
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
