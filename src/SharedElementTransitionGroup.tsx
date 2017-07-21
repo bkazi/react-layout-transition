@@ -1,21 +1,26 @@
-import React from 'react';
+import * as React from 'react';
 
-import fireOnce from './utils/fireOnce.js';
+import fireOnce from './utils/fireOnce';
+import {childrenToMap, compareChildren} from './utils/children';
 
-const childrenToMap = (children) => {
-    const childrenArray = React.Children.toArray(children);
-    const keyedArray = childrenArray.map((child) => [child.key, child]);
-    return new Map(keyedArray);
-};
+export interface SharedElementTransitionGroupProps {
+    children: React.ReactChild,
+}
 
-const compareChildren = (children1, children2) => {
-    const keys1 = Array.from(children1.keys());
-    const keys2 = Array.from(children2.keys());
+export interface SharedElementTransitionGroupState {
+    outgoingShow: boolean,
+    incomingShow: boolean,
+    children: Map<string, React.ReactChild>,
+    transitionPending: boolean,
+}
 
-    return keys1 === keys2;
-};
-
-class SharedElementTransitionGroup extends React.Component {
+class SharedElementTransitionGroup extends React.Component<SharedElementTransitionGroupProps, SharedElementTransitionGroupState> {
+    outgoingSharedElements: Array<Element>
+    outgoingRef?: HTMLElement
+    incomingSharedElements: Array<Element>;
+    incomingRef?: HTMLElement;
+    containerRef: HTMLElement;
+    
     constructor(props) {
         super();
 
@@ -25,18 +30,30 @@ class SharedElementTransitionGroup extends React.Component {
             children: childrenToMap(props.children),
             transitionPending: false,
         };
-        this.outgoingSharedElements;
-        this.incomingSharedElements;
     }
 
-    getSharedElements = () => {
-        if (this.outgoingSharedElements && this.incomingSharedElements) return {outgoingSharedElements: this.outgoingSharedElements, incomingSharedElements: this.incomingSharedElements};
+    getSharedElements = (): {
+        outgoingSharedElements?: Array<Element>,
+        incomingSharedElements?: Array<Element>,
+    } => {
+        if (this.outgoingSharedElements && this.incomingSharedElements) {
+            return {
+                outgoingSharedElements: this.outgoingSharedElements,
+                incomingSharedElements: this.incomingSharedElements
+            };
+        }
+        if (!this.outgoingRef || !this.incomingRef) {
+            return {
+                outgoingSharedElements: undefined,
+                incomingSharedElements: undefined,
+            };
+        }
 
         this.outgoingSharedElements = [];
         this.incomingSharedElements = [];
 
-        const outgoingMarkedEls = this.outgoingRef.querySelectorAll('[id]');
-        const incomingMarkedEls = this.incomingRef.querySelectorAll('[id]');
+        const outgoingMarkedEls = Array.from(this.outgoingRef.querySelectorAll('[id]'));
+        const incomingMarkedEls = Array.from(this.incomingRef.querySelectorAll('[id]'));
 
         const outgoingSet = new Set(Array.from(outgoingMarkedEls).map((el) => el.id));
         const incomingSet = new Set(Array.from(incomingMarkedEls).map((el) => el.id));
@@ -66,7 +83,10 @@ class SharedElementTransitionGroup extends React.Component {
         const prevChildren = this.state.children;
         const newChildren = childrenToMap(nextProps.children);
 
-        const allChildren = new Map([...prevChildren, ...newChildren]);
+        const allChildren: Map<string, React.ReactChild> = new Map([
+            ...Array.from(prevChildren),
+            ...Array.from(newChildren)
+        ]);
 
         allChildren.forEach((value, key) => {
             const outgoing = prevChildren.has(key);
@@ -106,7 +126,7 @@ class SharedElementTransitionGroup extends React.Component {
     }
 
     createElementsForTransition(outgoingSharedElements, initialDimensArr) {
-        const newElements = [];
+        const newElements: Array<HTMLElement> = [];
         outgoingSharedElements.forEach((sharedEl, idx) => {
             const element = sharedEl.cloneNode();
             element.style.position = 'absolute';
@@ -125,7 +145,7 @@ class SharedElementTransitionGroup extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (!this.state.transitionPending) return;
         if (compareChildren(this.state.children, prevState.children)) return;
-        if (!this.incomingRef && !this.outgoingRef) return;
+        if (!this.incomingRef || !this.outgoingRef) return;
 
         this.setState((state) => ({
             transitionPending: false,
@@ -137,6 +157,8 @@ class SharedElementTransitionGroup extends React.Component {
 
         const newElements = this.createElementsForTransition(outgoingSharedElements, initialDimensArr);
         fireOnce(newElements, 'transitionend', (events) => {
+            if (!this.incomingRef) return;
+
             this.incomingRef.addEventListener('transitionend', () => {
                 events.forEach((event) => {
                     event.target.remove();
@@ -150,8 +172,8 @@ class SharedElementTransitionGroup extends React.Component {
                     }
                     this.outgoingRef = undefined;
                     this.incomingRef = undefined;
-                    this.outgoingSharedElements = undefined;
-                    this.incomingSharedElements = undefined;
+                    this.outgoingSharedElements = [];
+                    this.incomingSharedElements = [];
                     this.setState((prevState) => ({
                         ...prevState,
                         children: changedChildren,
@@ -166,11 +188,15 @@ class SharedElementTransitionGroup extends React.Component {
             }));
         });
 
-        const invert = [];
+        const invert: Array<{
+            sx: number,
+            sy: number,
+            x: number,
+            y: number,
+        }> = [];
 
         newElements.forEach((element, idx) => {
             this.containerRef.appendChild(element);
-            invert[idx] = {};
             invert[idx].sx = finalDimensArr[idx].width / initialDimensArr[idx].width;
             invert[idx].sy = finalDimensArr[idx].height / initialDimensArr[idx].height;
             invert[idx].x = finalDimensArr[idx].left - initialDimensArr[idx].left;
@@ -179,6 +205,8 @@ class SharedElementTransitionGroup extends React.Component {
 
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
+                if (!this.outgoingRef) return;
+
                 this.outgoingRef.addEventListener('transitionend', () => {
                     newElements.forEach((element, idx) => {
                         element.style.transform = `translate(${invert[idx].x}px, ${invert[idx].y}px) scale(${invert[idx].sx}, ${invert[idx].sy})`;
