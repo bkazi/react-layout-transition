@@ -1,11 +1,13 @@
 import * as React from 'react';
 
-const childrenToMap = (children: React.ReactNode): Map<string, React.ReactChild> => {
-    const childrenArray = React.Children.toArray(children);
-    const childMap: Map<string, React.ReactChild> = new Map();
-    childrenArray.forEach((child) => {
-        childMap.set(child.key, child);
-    });
+const childrenToMap = (children?: any): Map<string, React.ReactElement<any>> => {
+    const childMap: Map<string, React.ReactElement<any>> = new Map();
+    if (!children) return childMap;
+    React.Children.forEach(children, (child) => {
+            if (React.isValidElement(child)) {
+                childMap.set(<string>child.key, child)
+            }
+        });
     return childMap;
 };
 
