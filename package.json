@@ -23,6 +23,9 @@
   "author": "Bilal Kazi",
   "license": "MIT",
   "devDependencies": {
+    "@types/react": "^15.0.38",
+    "@types/react-dom": "^15.5.1",
+    "awesome-typescript-loader": "^3.2.1",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
@@ -47,6 +50,7 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-uglify": "^2.0.1",
+    "typescript": "^2.4.2",
     "webpack": "^3.1.0",
     "webpack-dev-server": "^2.5.1"
   }
