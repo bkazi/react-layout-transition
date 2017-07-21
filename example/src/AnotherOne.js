@@ -1,5 +1,5 @@
 import React from 'react';
-import {LayoutTransitionGroup} from '../../src/index.js';
+import {LayoutTransitionGroup} from '../../src/index.ts';
 
 class AnotherOne extends LayoutTransitionGroup {
     state = {
