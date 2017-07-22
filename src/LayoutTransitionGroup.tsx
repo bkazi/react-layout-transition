@@ -54,7 +54,7 @@ class LayoutTransitionGroup extends React.Component<{}, LayoutTransitionGroupSta
         }));
     };
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps: {}, prevState: {}) {
         if (!this.state._lTransitionPending) return;
         if (!this.state._lTransitionRefs) return;
 

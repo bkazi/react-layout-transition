@@ -15,13 +15,13 @@ export interface SharedElementTransitionGroupState {
 }
 
 class SharedElementTransitionGroup extends React.Component<SharedElementTransitionGroupProps, SharedElementTransitionGroupState> {
-    outgoingSharedElements: Array<Element> = [];
+    outgoingSharedElements: Array<HTMLElement> = [];
     outgoingRef?: HTMLElement;
-    incomingSharedElements: Array<Element> = [];
+    incomingSharedElements: Array<HTMLElement> = [];
     incomingRef?: HTMLElement;
     containerRef: HTMLDivElement;
     
-    constructor(props) {
+    constructor(props: SharedElementTransitionGroupProps) {
         super();
 
         this.state = {
@@ -33,8 +33,8 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
     }
 
     getSharedElements = (): {
-        outgoingSharedElements?: Array<Element>,
-        incomingSharedElements?: Array<Element>,
+        outgoingSharedElements?: Array<HTMLElement>,
+        incomingSharedElements?: Array<HTMLElement>,
     } => {
         if (this.outgoingSharedElements.length && this.incomingSharedElements.length) {
             return {
@@ -59,12 +59,12 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
         const incomingSet = new Set(Array.from(incomingMarkedEls).map((el) => el.id));
 
         for (let element of outgoingMarkedEls) {
-            if (incomingSet.has(element.id)) {
+            if (incomingSet.has(element.id) && element instanceof HTMLElement) {
                 this.outgoingSharedElements.push(element);
             }
         }
         for (let element of incomingMarkedEls) {
-            if (outgoingSet.has(element.id)) {
+            if (outgoingSet.has(element.id) && element instanceof HTMLElement) {
                 this.incomingSharedElements.push(element);
             }
         }
@@ -79,7 +79,7 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
         return {initialDimensArr, finalDimensArr};
     };
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps: SharedElementTransitionGroupProps) {
         const prevChildren = this.state.children;
         const newChildren = childrenToMap(nextProps.children);
 
@@ -99,7 +99,7 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
                         exit: () => {
                             this.exit(key);
                         },
-                        innerRef: (ref) => {
+                        innerRef: (ref: HTMLElement) => {
                             this.outgoingRef = ref;
                         },
                         outgoing: true,
@@ -109,7 +109,7 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
                 allChildren.set(key, React.cloneElement(
                     value,
                     {
-                        innerRef: (ref) => {
+                        innerRef: (ref: HTMLElement) => {
                             this.incomingRef = ref;
                         },
                         incoming: true,
@@ -125,24 +125,26 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
         }));
     }
 
-    createElementsForTransition(outgoingSharedElements, initialDimensArr) {
+    createElementsForTransition(outgoingSharedElements: HTMLElement[], initialDimensArr: ClientRect[]) {
         const newElements: Array<HTMLElement> = [];
         outgoingSharedElements.forEach((sharedEl, idx) => {
-            const element = sharedEl.cloneNode();
-            element.style.position = 'absolute';
-            element.style.top = initialDimensArr[idx].top + window.scrollY - this.containerRef.offsetTop;
-            element.style.left = initialDimensArr[idx].left + window.scrollX - this.containerRef.offsetLeft;
-            element.style.height = initialDimensArr[idx].height;
-            element.style.width = initialDimensArr[idx].width;
-            element.style.transformOrigin = '0 0';
-            element.style.transition = 'transform 300ms ease-in-out';
-            newElements.push(element);
+            const element = sharedEl.cloneNode(true);
+            if (element instanceof HTMLElement) {
+                element.style.position = 'absolute';
+                element.style.top = (initialDimensArr[idx].top + window.scrollY - this.containerRef.offsetTop).toString();
+                element.style.left = (initialDimensArr[idx].left + window.scrollX - this.containerRef.offsetLeft).toString();
+                element.style.height = (initialDimensArr[idx].height).toString();
+                element.style.width = (initialDimensArr[idx].width).toString();
+                element.style.transformOrigin = '0 0';
+                element.style.transition = 'transform 300ms ease-in-out';
+                newElements.push(element);
+            }
         });
 
         return newElements;
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps: SharedElementTransitionGroupProps, prevState: SharedElementTransitionGroupProps) {
         if (!this.state.transitionPending) return;
         if (compareChildren(this.state.children, prevState.children)) return;
         if (!this.incomingRef || !this.outgoingRef) return;
@@ -152,16 +154,19 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
         }));
 
         const {outgoingSharedElements} = this.getSharedElements();
+        if (!outgoingSharedElements) return;
         const {initialDimensArr, finalDimensArr} = this.getSharedDimens();
         const allChildren = this.state.children;
 
         const newElements = this.createElementsForTransition(outgoingSharedElements, initialDimensArr);
-        fireOnce(newElements, 'transitionend', (events) => {
+        fireOnce(newElements, 'transitionend', (events: TransitionEvent[]) => {
             if (!this.incomingRef) return;
 
             this.incomingRef.addEventListener('transitionend', () => {
                 events.forEach((event) => {
-                    event.target.remove();
+                    if (event.target instanceof HTMLElement) {
+                        event.target.remove();
+                    }
                 });
                 for (let [key, value] of Array.from(allChildren.entries())) {
                     let changedChildren = new Map();
@@ -226,7 +231,7 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
         });
     }
 
-    exit = (key) => {
+    exit = (key: string) => {
         this.setState((prevState) => ({
             ...prevState,
             children: prevState.children.delete(key),
