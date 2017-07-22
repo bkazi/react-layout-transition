@@ -43,6 +43,7 @@
     "eslint-config-google": "^0.8.1",
     "eslint-plugin-react": "^7.1.0",
     "html-webpack-plugin": "^2.29.0",
+    "loglevel": "^1.4.1",
     "npm-run-all": "^4.0.2",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
