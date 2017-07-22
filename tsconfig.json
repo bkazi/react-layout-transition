@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
-        "strictNullChecks": true,
+        "strict": true,
         "removeComments": true,
-        "jsx": "preserve",
+        "module": "es2015",
+        "target": "es5",
+        "jsx": "react",
         "sourceMap": true,
-        "allowJs": true,
         "lib": [
             "es2015",
             "dom"
@@ -15,9 +16,5 @@
     ],
     "exclude": [
         "node_modules"
-    ],
-    "awesomeTypescriptLoaderOptions": {
-        "useBabel": true,
-        "useCache": true
-    }
+    ]
 }
