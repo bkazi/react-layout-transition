@@ -3,7 +3,8 @@
         "strict": true,
         "removeComments": true,
         "jsx": "react",
-        "target": "es2015",
+        "module": "es2015",
+        "target": "es5",
         "outDir": "es",
         "pretty": true,
         "noEmitOnError": true
