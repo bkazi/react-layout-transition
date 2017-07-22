@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "strict": true,
         "removeComments": true,
         "jsx": "react",
         "target": "es2015",
