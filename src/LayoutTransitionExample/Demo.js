@@ -9,9 +9,9 @@ class Demo extends LayoutTransitionGroup {
 
     increment = () => {
         // this is where the magic happens ✨
-        this.beginTransition(this.listRef, (prevState) => ({
+        this.beginTransition((prevState) => ({
             count: prevState.count + 1,
-        }));
+        }), this.listRef);
     };
 
     render() {
@@ -50,9 +50,9 @@ const codeString = `class Demo extends LayoutTransitionGroup {
 
     increment() {
         // this is where the magic happens ✨
-        this.beginTransition(this.listRef, (prevState) => ({
+        this.beginTransition((prevState) => ({
             count: prevState.count + 1,
-        }));
+        }), this.listRef);
     };
 
     render() {
