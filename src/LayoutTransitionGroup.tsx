@@ -23,6 +23,9 @@ export interface ILayoutTransitionGroupState {
     _lTransitionEasing?: string;
 }
 
+/**
+ * Class for the base component used to manage layout transitions
+ */
 class LayoutTransitionGroup extends React.Component<
     {},
     ILayoutTransitionGroupState
@@ -130,6 +133,12 @@ class LayoutTransitionGroup extends React.Component<
         }));
     }
 
+    /**
+     * @param stateUpdateFn Function to update the state for transition
+     * @param refs The ref(s) to the elements to transition
+     * @param timing Value (in ms) for the transition
+     * @param easing The easing curve to use for transition
+     */
     protected beginTransition = (
         stateUpdateFn: ({}) => {},
         refs: HTMLElement[] | HTMLElement,
