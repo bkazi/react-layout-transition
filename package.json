@@ -7,6 +7,7 @@
   "js:next": "es/index.js",
   "scripts": {
     "serve": "webpack-dev-server --config ./example/webpack.config.js",
+    "lint": "tslint -c ./tslint.json -p tsconfig.json --type-check ./src/**/*",
     "build": "npm-run-all --parallel build:*",
     "build:dist": "webpack --config webpack.config.js && NODE_ENV=\"PRODUCTION\" webpack --config webpack.config.js",
     "build:es-lib": "tsc -p ./tsconfig.es.json",
