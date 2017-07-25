@@ -1,81 +1,69 @@
 {
-  "name": "react-layout-transition",
-  "version": "0.0.1-alpha.6",
-  "description": "Trying to make layout transition in React simple",
-  "main": "lib/index.js",
-  "module": "es/index.js",
-  "js:next": "es/index.js",
-  "scripts": {
-    "serve": "webpack-dev-server --config ./example/webpack.config.js",
-    "lint": "tslint -c ./tslint.json -p tsconfig.json --type-check ./src/**/*",
-    "format": "prettier --single-quote --trailing-comma all --no-bracket-spacing --tab-width 4 --use-tabs --write \"src/**/*.*\"",
-    "precommit": "lint-staged",
-    "prepare": "npm run build",
-    "build": "npm-run-all --parallel build:*",
-    "build:dist": "webpack --config webpack.config.js && NODE_ENV=\"PRODUCTION\" webpack --config webpack.config.js",
-    "build:es-lib": "tsc -p ./tsconfig.es.json",
-    "build:cjs-lib": "tsc -p ./tsconfig.cjs.json"
-  },
-  "lint-staged": {
-    "src/**/*.ts": [
-      "npm run lint",
-      "npm run format",
-      "git add"
-    ],
-    "src/**/*.tsx": [
-      "npm run lint",
-      "npm run format",
-      "git add"
-    ]
-  },
-  "files": [
-    "src",
-    "dist",
-    "lib",
-    "es"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bkazi/react-layout-transition.git"
-  },
-  "author": "Bilal Kazi",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/react": "^15.0.38",
-    "@types/react-dom": "^15.5.1",
-    "awesome-typescript-loader": "^3.2.1",
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "^7.1.1",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
-    "babili-webpack-plugin": "^0.1.2",
-    "eslint": "^4.3.0",
-    "eslint-config-google": "^0.8.1",
-    "eslint-plugin-react": "^7.1.0",
-    "html-webpack-plugin": "^2.29.0",
-    "husky": "^0.14.3",
-    "lint-staged": "^4.0.2",
-    "loglevel": "^1.4.1",
-    "npm-run-all": "^4.0.2",
-    "prettier": "^1.5.3",
-    "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-hot-loader": "^3.0.0-beta.7",
-    "tslint": "^5.5.0",
-    "tslint-config-prettier": "^1.1.0",
-    "tslint-react": "^3.0.0",
-    "typescript": "^2.4.2",
-    "webpack": "^3.3.0",
-    "webpack-dev-server": "^2.6.0"
-  },
-  "dependencies": {
-    "warning": "^3.0.0"
-  }
+    "name": "react-layout-transition",
+    "version": "0.0.1-alpha.6",
+    "description": "Trying to make layout transition in React simple",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "js:next": "es/index.js",
+    "scripts": {
+        "serve": "webpack-dev-server --config ./example/webpack.config.js",
+        "lint": "tslint -c ./tslint.json -p tsconfig.json --type-check ./src/**/*",
+        "format": "prettier --single-quote --trailing-comma all --no-bracket-spacing --tab-width 4 --write \"src/**/*.*\"",
+        "precommit": "lint-staged",
+        "prepare": "npm run build",
+        "build": "npm-run-all --parallel build:*",
+        "build:dist": "webpack --config webpack.config.js && NODE_ENV=\"PRODUCTION\" webpack --config webpack.config.js",
+        "build:es-lib": "tsc -p ./tsconfig.es.json",
+        "build:cjs-lib": "tsc -p ./tsconfig.cjs.json"
+    },
+    "lint-staged": {
+        "src/**/*.ts": ["npm run lint", "npm run format", "git add"],
+        "src/**/*.tsx": ["npm run lint", "npm run format", "git add"]
+    },
+    "files": ["src", "dist", "lib", "es"],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bkazi/react-layout-transition.git"
+    },
+    "author": "Bilal Kazi",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/react": "^15.0.38",
+        "@types/react-dom": "^15.5.1",
+        "@types/warning": "^3.0.0",
+        "awesome-typescript-loader": "^3.2.1",
+        "babel-cli": "^6.24.1",
+        "babel-core": "^6.25.0",
+        "babel-eslint": "^7.2.3",
+        "babel-loader": "^7.1.1",
+        "babel-plugin-external-helpers": "^6.22.0",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-plugin-transform-object-rest-spread": "^6.23.0",
+        "babel-polyfill": "^6.23.0",
+        "babel-preset-env": "^1.6.0",
+        "babel-preset-react": "^6.24.1",
+        "babili-webpack-plugin": "^0.1.2",
+        "eslint": "^4.3.0",
+        "eslint-config-google": "^0.8.1",
+        "eslint-plugin-react": "^7.1.0",
+        "html-webpack-plugin": "^2.29.0",
+        "husky": "^0.14.3",
+        "lint-staged": "^4.0.2",
+        "loglevel": "^1.4.1",
+        "npm-run-all": "^4.0.2",
+        "prettier": "^1.5.3",
+        "prop-types": "^15.5.10",
+        "react": "^15.6.1",
+        "react-dom": "^15.6.1",
+        "react-hot-loader": "^3.0.0-beta.7",
+        "tslint": "^5.5.0",
+        "tslint-config-prettier": "^1.1.0",
+        "tslint-react": "^3.0.0",
+        "typescript": "^2.4.2",
+        "webpack": "^3.3.0",
+        "webpack-dev-server": "^2.6.0"
+    },
+    "dependencies": {
+        "warning": "^3.0.0"
+    }
 }
