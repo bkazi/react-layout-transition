@@ -125,8 +125,8 @@ class SharedElementTransitionGroup extends React.Component<
 					let element;
 					if (value.props.incoming) {
 						element = React.cloneElement(value, {
-							ref: undefined,
 							incoming: undefined,
+							ref: undefined,
 						});
 						changedChildren.set(key, element);
 					}
@@ -283,8 +283,8 @@ class SharedElementTransitionGroup extends React.Component<
 		}
 
 		return {
-			outgoingSharedElements: this.outgoingSharedElements,
 			incomingSharedElements: this.incomingSharedElements,
+			outgoingSharedElements: this.outgoingSharedElements,
 		};
 	};
 
