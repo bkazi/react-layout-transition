@@ -17,8 +17,8 @@ export interface ILayoutTransitionGroupState {
 }
 
 class LayoutTransitionGroup extends React.Component<{}, ILayoutTransitionGroupState> {
-    private lInitialDimens: Map<string, ClientRect> = new Map();
-    private lfinalDimens: Map<string, ClientRect> = new Map();
+    private initialDimens: Map<string, ClientRect> = new Map();
+    private finalDimens: Map<string, ClientRect> = new Map();
 
     public constructor() {
         super();
@@ -46,7 +46,7 @@ class LayoutTransitionGroup extends React.Component<{}, ILayoutTransitionGroupSt
             if (child instanceof HTMLElement) {
                 const key = child.dataset.layoutKey;
                 if (key) {
-                    this.lfinalDimens.set(key, child.getBoundingClientRect());
+                    this.finalDimens.set(key, child.getBoundingClientRect());
                 }
             }
         });
@@ -60,11 +60,11 @@ class LayoutTransitionGroup extends React.Component<{}, ILayoutTransitionGroupSt
                     child.style.pointerEvents = 'none';
                     return;
                 };
-                const initialDimen = this.lInitialDimens.get(key);
+                const initialDimen = this.initialDimens.get(key);
                 if (!initialDimen) {
                     return;
                 }
-                const finalDimen = this.lfinalDimens.get(key);
+                const finalDimen = this.finalDimens.get(key);
                 if (!finalDimen) {
                     return;
                 }
@@ -134,7 +134,7 @@ class LayoutTransitionGroup extends React.Component<{}, ILayoutTransitionGroupSt
             const key = `.${index}`;
             child.dataset.layoutKey = key;
 
-            this.lInitialDimens.set(key, child.getBoundingClientRect());
+            this.initialDimens.set(key, child.getBoundingClientRect());
         });
 
         // Update state
