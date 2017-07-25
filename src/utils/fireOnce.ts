@@ -1,7 +1,7 @@
-export default function fireOnce(nodes: Array<HTMLElement>, eventType: string, func: Function) {
+export default function fireOnce(nodes: HTMLElement[], eventType: string, func: (events: Event[]) => void) {
     const totalCount = nodes.length;
     let count = 0;
-    const events: Array<Event> = [];
+    const events: Event[] = [];
     const eventListener = (event: Event) => {
         count++;
         events.push(event);
