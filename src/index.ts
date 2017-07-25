@@ -1,7 +1,4 @@
 import LayoutTransitionGroup from './LayoutTransitionGroup';
 import SharedElementTransitionGroup from './SharedElementTransitionGroup';
 
-export {
-    SharedElementTransitionGroup,
-    LayoutTransitionGroup,
-};
+export {SharedElementTransitionGroup, LayoutTransitionGroup};
