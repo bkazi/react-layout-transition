@@ -9,54 +9,35 @@ const getFlattenedChildren = (refs: HTMLElement[]): Element[] => {
     return childNodes;
 };
 
-export interface LayoutTransitionGroupState {
+export interface ILayoutTransitionGroupState {
     _lTransitionPending: boolean,
     _lTransitionRefs?: HTMLElement[],
     _lTransitionTiming?: number,
     _lTransitionEasing?: string,
 }
 
-class LayoutTransitionGroup extends React.Component<{}, LayoutTransitionGroupState> {
-    _lInitialDimens: Map<string, ClientRect> = new Map();
-    _lfinalDimens: Map<string, ClientRect> = new Map();
+class LayoutTransitionGroup extends React.Component<{}, ILayoutTransitionGroupState> {
+    private lInitialDimens: Map<string, ClientRect> = new Map();
+    private lfinalDimens: Map<string, ClientRect> = new Map();
 
-    constructor() {
+    public constructor() {
         super();
 
         this.state = {
+            _lTransitionEasing: undefined,
             _lTransitionPending: false,
             _lTransitionRefs: undefined,
             _lTransitionTiming: undefined,
-            _lTransitionEasing: undefined,
         }
     }
 
-    beginTransition = (stateUpdateFn: Function, refs: HTMLElement[] | HTMLElement, timing= 200, easing = 'ease-in-out') => {
-        if (!(refs instanceof Array)) refs = [refs];
-        // Traverse top layers for inital positions
-        const childNodes = getFlattenedChildren(refs);
-        childNodes.forEach((child, index) => {
-            if (!(child instanceof HTMLElement)) return;
-            // mark initial elements with unique keys to track
-            const key = `.${index}`;
-            child.dataset.layoutKey = key;
-
-            this._lInitialDimens.set(key, child.getBoundingClientRect());
-        });
-
-        // Update state
-        this.setState((prevState) => ({
-            ...stateUpdateFn(prevState),
-            _lTransitionPending: true,
-            _lTransitionRefs: refs,
-            _lTransitionTiming: timing,
-            _lTransitionEasing: easing,
-        }));
-    };
-
-    componentDidUpdate(prevProps: {}, prevState: {}) {
-        if (!this.state._lTransitionPending) return;
-        if (!this.state._lTransitionRefs) return;
+    public componentDidUpdate(prevProps: {}, prevState: {}) {
+        if (!this.state._lTransitionPending) {
+            return;
+        }
+        if (!this.state._lTransitionRefs) {
+            return;
+        }
 
         // Traverse top layer for final positions
         const refs = this.state._lTransitionRefs;
@@ -65,7 +46,7 @@ class LayoutTransitionGroup extends React.Component<{}, LayoutTransitionGroupSta
             if (child instanceof HTMLElement) {
                 const key = child.dataset.layoutKey;
                 if (key) {
-                    this._lfinalDimens.set(key, child.getBoundingClientRect());
+                    this.lfinalDimens.set(key, child.getBoundingClientRect());
                 }
             }
         });
@@ -79,10 +60,14 @@ class LayoutTransitionGroup extends React.Component<{}, LayoutTransitionGroupSta
                     child.style.pointerEvents = 'none';
                     return;
                 };
-                const initialDimen = this._lInitialDimens.get(key);
-                if (!initialDimen) return;
-                const finalDimen = this._lfinalDimens.get(key);
-                if (!finalDimen) return;
+                const initialDimen = this.lInitialDimens.get(key);
+                if (!initialDimen) {
+                    return;
+                }
+                const finalDimen = this.lfinalDimens.get(key);
+                if (!finalDimen) {
+                    return;
+                }
                 const x = initialDimen.left - finalDimen.left;
                 const y = initialDimen.top - finalDimen.top;
                 const sx = initialDimen.width / finalDimen.width;
@@ -128,12 +113,39 @@ class LayoutTransitionGroup extends React.Component<{}, LayoutTransitionGroupSta
         });
 
         this.setState((state) => ({
+            _lTransitionEasing: undefined,
             _lTransitionPending: false,
             _lTransitionRefs: undefined,
             _lTransitionTiming: undefined,
-            _lTransitionEasing: undefined,
         }));
     }
+
+    protected beginTransition = (stateUpdateFn: ({}) => {}, refs: HTMLElement[] | HTMLElement, timing= 200, easing = 'ease-in-out') => {
+        if (!(refs instanceof Array)) {
+            refs = [refs];
+        }
+        // Traverse top layers for inital positions
+        const childNodes = getFlattenedChildren(refs);
+        childNodes.forEach((child, index) => {
+            if (!(child instanceof HTMLElement)) {
+                return;
+            }
+            // mark initial elements with unique keys to track
+            const key = `.${index}`;
+            child.dataset.layoutKey = key;
+
+            this.lInitialDimens.set(key, child.getBoundingClientRect());
+        });
+
+        // Update state
+        this.setState((prevState) => ({
+            ...stateUpdateFn(prevState),
+            _lTransitionEasing: easing,
+            _lTransitionPending: true,
+            _lTransitionRefs: refs,
+            _lTransitionTiming: timing,
+        }));
+    };
 }
 
 export default LayoutTransitionGroup;
