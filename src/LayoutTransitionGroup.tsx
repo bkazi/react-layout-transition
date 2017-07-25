@@ -1,159 +1,204 @@
 import * as React from 'react';
+import * as warning from 'warning';
 
 import fireOnce from './utils/fireOnce';
 
+declare var process: {
+    env: {
+        NODE_ENV: string;
+    };
+};
+
 const getFlattenedChildren = (refs: HTMLElement[]): Element[] => {
-	const childNodes = refs
-		.map(ref => Array.from(ref.children))
-		.reduce((acc, nodes) => acc.concat(nodes));
-	return childNodes;
+    const childNodes = refs
+        .map(ref => Array.from(ref.children))
+        .reduce((acc, nodes) => acc.concat(nodes));
+    return childNodes;
 };
 
 export interface ILayoutTransitionGroupState {
-	_lTransitionPending: boolean;
-	_lTransitionRefs?: HTMLElement[];
-	_lTransitionTiming?: number;
-	_lTransitionEasing?: string;
+    _lTransitionPending: boolean;
+    _lTransitionRefs?: HTMLElement[];
+    _lTransitionTiming?: number;
+    _lTransitionEasing?: string;
 }
 
 class LayoutTransitionGroup extends React.Component<
-	{},
-	ILayoutTransitionGroupState
+    {},
+    ILayoutTransitionGroupState
 > {
-	private initialDimens: Map<string, ClientRect> = new Map();
-	private finalDimens: Map<string, ClientRect> = new Map();
+    private initialDimens: Map<string, ClientRect> = new Map();
+    private finalDimens: Map<string, ClientRect> = new Map();
 
-	public constructor() {
-		super();
+    public constructor() {
+        super();
 
-		this.state = {
-			_lTransitionEasing: undefined,
-			_lTransitionPending: false,
-			_lTransitionRefs: undefined,
-			_lTransitionTiming: undefined,
-		};
-	}
+        this.state = {
+            _lTransitionEasing: undefined,
+            _lTransitionPending: false,
+            _lTransitionRefs: undefined,
+            _lTransitionTiming: undefined,
+        };
+    }
 
-	public componentDidUpdate(prevProps: {}, prevState: {}) {
-		if (!this.state._lTransitionPending) {
-			return;
-		}
-		if (!this.state._lTransitionRefs) {
-			return;
-		}
+    public componentDidUpdate(prevProps: {}, prevState: {}) {
+        if (!this.state._lTransitionPending) {
+            return;
+        }
+        if (!this.state._lTransitionRefs) {
+            return;
+        }
 
-		// Traverse top layer for final positions
-		const refs = this.state._lTransitionRefs;
-		const childNodes = getFlattenedChildren(refs);
-		childNodes.forEach(child => {
-			if (child instanceof HTMLElement) {
-				const key = child.dataset.layoutKey;
-				if (key) {
-					this.finalDimens.set(key, child.getBoundingClientRect());
-				}
-			}
-		});
+        // Traverse top layer for final positions
+        const refs = this.state._lTransitionRefs;
+        const childNodes = getFlattenedChildren(refs);
+        childNodes.forEach(child => {
+            if (child instanceof HTMLElement) {
+                const key = child.dataset.layoutKey;
+                if (key) {
+                    this.finalDimens.set(key, child.getBoundingClientRect());
+                }
+            }
+        });
 
-		// Fix existing nodes in same place
-		childNodes.forEach((child, i) => {
-			if (child instanceof HTMLElement) {
-				const key = child.dataset.layoutKey;
-				if (!key) {
-					child.style.opacity = '0';
-					child.style.pointerEvents = 'none';
-					return;
-				}
-				const initialDimen = this.initialDimens.get(key);
-				if (!initialDimen) {
-					return;
-				}
-				const finalDimen = this.finalDimens.get(key);
-				if (!finalDimen) {
-					return;
-				}
-				const x = initialDimen.left - finalDimen.left;
-				const y = initialDimen.top - finalDimen.top;
-				const sx = initialDimen.width / finalDimen.width;
-				const sy = initialDimen.height / finalDimen.height;
-				child.style.transition = '';
-				child.style.transform = `translate(${x}px, ${y}px) scale(${sx}, ${sy})`;
-				child.style.transformOrigin = '0 0';
-			}
-		});
+        // Fix existing nodes in same place
+        childNodes.forEach((child, i) => {
+            if (child instanceof HTMLElement) {
+                const key = child.dataset.layoutKey;
+                if (!key) {
+                    child.style.opacity = '0';
+                    child.style.pointerEvents = 'none';
+                    return;
+                }
+                const initialDimen = this.initialDimens.get(key);
+                if (!initialDimen) {
+                    return;
+                }
+                const finalDimen = this.finalDimens.get(key);
+                if (!finalDimen) {
+                    return;
+                }
+                const x = initialDimen.left - finalDimen.left;
+                const y = initialDimen.top - finalDimen.top;
+                const sx = initialDimen.width / finalDimen.width;
+                const sy = initialDimen.height / finalDimen.height;
+                child.style.transition = '';
+                child.style.transform = `translate(${x}px, ${y}px) scale(${sx}, ${sy})`;
+                child.style.transformOrigin = '0 0';
+            }
+        });
 
-		// Transition
-		// Animate into new position
-		const timing = this.state._lTransitionTiming;
-		const easing = this.state._lTransitionEasing;
-		requestAnimationFrame(() => {
-			requestAnimationFrame(() => {
-				const initialNodes: HTMLElement[] = [];
-				const newNodes: HTMLElement[] = [];
-				childNodes.forEach((child, i) => {
-					if (child instanceof HTMLElement) {
-						const key = child.dataset.layoutKey;
-						if (!key) {
-							newNodes.push(child);
-							return;
-						}
-						child.style.transition = `transform ${timing}ms ${easing}`;
-						child.style.transform = '';
-						initialNodes.push(child);
-					}
-				});
-				fireOnce(initialNodes, 'transitionend', () => {
-					initialNodes.forEach(child => {
-						child.style.transition = '';
-						child.removeAttribute('data-layout-key');
-					});
-					newNodes.forEach(child => {
-						child.style.transition = 'opacity 200ms ease-in-out';
-						child.style.opacity = '1';
-						child.style.pointerEvents = '';
-					});
-				});
-			});
-		});
+        // Transition
+        // Animate into new position
+        const timing = this.state._lTransitionTiming;
+        const easing = this.state._lTransitionEasing;
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                const initialNodes: HTMLElement[] = [];
+                const newNodes: HTMLElement[] = [];
+                childNodes.forEach((child, i) => {
+                    if (child instanceof HTMLElement) {
+                        const key = child.dataset.layoutKey;
+                        if (!key) {
+                            newNodes.push(child);
+                            return;
+                        }
+                        child.style.transition = `transform ${timing}ms ${easing}`;
+                        child.style.transform = '';
+                        initialNodes.push(child);
+                    }
+                });
+                fireOnce(initialNodes, 'transitionend', () => {
+                    initialNodes.forEach(child => {
+                        child.style.transition = '';
+                        child.removeAttribute('data-layout-key');
+                    });
+                    newNodes.forEach(child => {
+                        child.style.transition = 'opacity 200ms ease-in-out';
+                        child.style.opacity = '1';
+                        child.style.pointerEvents = '';
+                    });
+                });
+            });
+        });
 
-		this.setState(state => ({
-			_lTransitionEasing: undefined,
-			_lTransitionPending: false,
-			_lTransitionRefs: undefined,
-			_lTransitionTiming: undefined,
-		}));
-	}
+        this.setState(state => ({
+            _lTransitionEasing: undefined,
+            _lTransitionPending: false,
+            _lTransitionRefs: undefined,
+            _lTransitionTiming: undefined,
+        }));
+    }
 
-	protected beginTransition = (
-		stateUpdateFn: ({}) => {},
-		refs: HTMLElement[] | HTMLElement,
-		timing = 200,
-		easing = 'ease-in-out',
-	) => {
-		if (!(refs instanceof Array)) {
-			refs = [refs];
-		}
-		// Traverse top layers for inital positions
-		const childNodes = getFlattenedChildren(refs);
-		childNodes.forEach((child, index) => {
-			if (!(child instanceof HTMLElement)) {
-				return;
-			}
-			// mark initial elements with unique keys to track
-			const key = `.${index}`;
-			child.dataset.layoutKey = key;
+    protected beginTransition = (
+        stateUpdateFn: ({}) => {},
+        refs: HTMLElement[] | HTMLElement,
+        timing = 200,
+        easing = 'ease-in-out',
+    ) => {
+        if ('production' !== process.env.NODE_ENV) {
+            const param1 =
+                !!stateUpdateFn && typeof stateUpdateFn === 'function';
+            const param2 =
+                !!refs &&
+                (refs instanceof Array || refs instanceof HTMLElement);
+            const param3 = !timing || (!!timing && typeof timing === 'number');
+            const param4 = !easing || (!!easing && typeof easing === 'string');
+            const all = param1 && param2 && param3 && param4;
+            if (!all) {
+                warning(
+                    all,
+                    'Function called with incorrect parameter types. Correct signature is beginTransition(stateUpdateFn: (previousState) => newState, refs: HTMLElement | HTMLElement[] [, timing?: number, easing?: string)',
+                );
+            } else {
+                warning(
+                    stateUpdateFn && typeof stateUpdateFn === 'function',
+                    'First parameter of beginTransition must be the state update function',
+                );
+                warning(
+                    refs &&
+                        (refs instanceof Array || refs instanceof HTMLElement),
+                    'Second parameter of beginTransition must be an array of HTML refs or a single HTML ref',
+                );
+                warning(
+                    !timing || (timing && typeof timing === 'number'),
+                    'If third parameter of beginTransition is defined it must be a number',
+                );
+                warning(
+                    !easing || (easing && typeof easing === 'string'),
+                    'If fourth parameter of beginTransition is defined then it must be a string',
+                );
+            }
+        }
+        if (!stateUpdateFn || !refs) {
+            return;
+        }
 
-			this.initialDimens.set(key, child.getBoundingClientRect());
-		});
+        if (!(refs instanceof Array)) {
+            refs = [refs];
+        }
+        // Traverse top layers for inital positions
+        const childNodes = getFlattenedChildren(refs);
+        childNodes.forEach((child, index) => {
+            if (!(child instanceof HTMLElement)) {
+                return;
+            }
+            // mark initial elements with unique keys to track
+            const key = `.${index}`;
+            child.dataset.layoutKey = key;
 
-		// Update state
-		this.setState(prevState => ({
-			...stateUpdateFn(prevState),
-			_lTransitionEasing: easing,
-			_lTransitionPending: true,
-			_lTransitionRefs: refs,
-			_lTransitionTiming: timing,
-		}));
-	};
+            this.initialDimens.set(key, child.getBoundingClientRect());
+        });
+
+        // Update state
+        this.setState(prevState => ({
+            ...stateUpdateFn(prevState),
+            _lTransitionEasing: easing,
+            _lTransitionPending: true,
+            _lTransitionRefs: refs,
+            _lTransitionTiming: timing,
+        }));
+    };
 }
 
 export default LayoutTransitionGroup;
