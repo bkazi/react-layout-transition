@@ -1,85 +1,38 @@
 import * as React from 'react';
 
-import fireOnce from './utils/fireOnce';
 import {childrenToMap, compareChildren} from './utils/children';
+import fireOnce from './utils/fireOnce';
 
-export interface SharedElementTransitionGroupProps {
+export interface ISharedElementTransitionGroupProps {
     children?: any,
 }
 
-export interface SharedElementTransitionGroupState {
+export interface ISharedElementTransitionGroupState {
     outgoingShow: boolean,
     incomingShow: boolean,
     children: Map<string, React.ReactElement<any>>,
     transitionPending: boolean,
 }
 
-class SharedElementTransitionGroup extends React.Component<SharedElementTransitionGroupProps, SharedElementTransitionGroupState> {
-    outgoingSharedElements: Array<HTMLElement> = [];
-    outgoingRef?: HTMLElement;
-    incomingSharedElements: Array<HTMLElement> = [];
-    incomingRef?: HTMLElement;
-    containerRef: HTMLDivElement;
+class SharedElementTransitionGroup extends React.Component<ISharedElementTransitionGroupProps, ISharedElementTransitionGroupState> {
+    private outgoingSharedElements: HTMLElement[] = [];
+    private outgoingRef?: HTMLElement;
+    private incomingSharedElements: HTMLElement[] = [];
+    private incomingRef?: HTMLElement;
+    private containerRef: HTMLDivElement;
     
-    constructor(props: SharedElementTransitionGroupProps) {
+    constructor(props: ISharedElementTransitionGroupProps) {
         super();
 
         this.state = {
-            outgoingShow: true,
-            incomingShow: false,
             children: childrenToMap(props.children),
+            incomingShow: false,
+            outgoingShow: true,
             transitionPending: false,
         };
     }
 
-    getSharedElements = (): {
-        outgoingSharedElements?: Array<HTMLElement>,
-        incomingSharedElements?: Array<HTMLElement>,
-    } => {
-        if (this.outgoingSharedElements.length && this.incomingSharedElements.length) {
-            return {
-                outgoingSharedElements: this.outgoingSharedElements,
-                incomingSharedElements: this.incomingSharedElements
-            };
-        }
-        if (!this.outgoingRef || !this.incomingRef) {
-            return {
-                outgoingSharedElements: undefined,
-                incomingSharedElements: undefined,
-            };
-        }
-
-        this.outgoingSharedElements = [];
-        this.incomingSharedElements = [];
-
-        const outgoingMarkedEls = Array.from(this.outgoingRef.querySelectorAll('[id]'));
-        const incomingMarkedEls = Array.from(this.incomingRef.querySelectorAll('[id]'));
-
-        const outgoingSet = new Set(Array.from(outgoingMarkedEls).map((el) => el.id));
-        const incomingSet = new Set(Array.from(incomingMarkedEls).map((el) => el.id));
-
-        for (let element of outgoingMarkedEls) {
-            if (incomingSet.has(element.id) && element instanceof HTMLElement) {
-                this.outgoingSharedElements.push(element);
-            }
-        }
-        for (let element of incomingMarkedEls) {
-            if (outgoingSet.has(element.id) && element instanceof HTMLElement) {
-                this.incomingSharedElements.push(element);
-            }
-        }
-
-        return {outgoingSharedElements: this.outgoingSharedElements, incomingSharedElements: this.incomingSharedElements};
-    }
-
-    getSharedDimens = () => {
-        const initialDimensArr = this.outgoingSharedElements.map((element) => element.getBoundingClientRect());
-        const finalDimensArr = this.incomingSharedElements.map((element) => element.getBoundingClientRect());
-
-        return {initialDimensArr, finalDimensArr};
-    };
-
-    componentWillReceiveProps(nextProps: SharedElementTransitionGroupProps) {
+    public componentWillReceiveProps(nextProps: ISharedElementTransitionGroupProps) {
         const prevChildren = this.state.children;
         const newChildren = childrenToMap(nextProps.children);
 
@@ -96,9 +49,6 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
                 allChildren.set(key, React.cloneElement(
                     value,
                     {
-                        exit: () => {
-                            this.exit(key);
-                        },
                         innerRef: (ref: HTMLElement) => {
                             this.outgoingRef = ref;
                         },
@@ -109,10 +59,10 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
                 allChildren.set(key, React.cloneElement(
                     value,
                     {
+                        incoming: true,
                         innerRef: (ref: HTMLElement) => {
                             this.incomingRef = ref;
                         },
-                        incoming: true,
                     }
                 ));
             }
@@ -125,42 +75,33 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
         }));
     }
 
-    createElementsForTransition(outgoingSharedElements: HTMLElement[], initialDimensArr: ClientRect[]) {
-        const newElements: Array<HTMLElement> = [];
-        outgoingSharedElements.forEach((sharedEl, idx) => {
-            const element = sharedEl.cloneNode(true);
-            if (element instanceof HTMLElement) {
-                element.style.position = 'absolute';
-                element.style.top = (initialDimensArr[idx].top + window.scrollY - this.containerRef.offsetTop).toString();
-                element.style.left = (initialDimensArr[idx].left + window.scrollX - this.containerRef.offsetLeft).toString();
-                element.style.height = (initialDimensArr[idx].height).toString();
-                element.style.width = (initialDimensArr[idx].width).toString();
-                element.style.transformOrigin = '0 0';
-                element.style.transition = 'transform 300ms ease-in-out';
-                newElements.push(element);
-            }
-        });
-
-        return newElements;
-    }
-
-    componentDidUpdate(prevProps: SharedElementTransitionGroupProps, prevState: SharedElementTransitionGroupProps) {
-        if (!this.state.transitionPending) return;
-        if (compareChildren(this.state.children, prevState.children)) return;
-        if (!this.incomingRef || !this.outgoingRef) return;
+    public componentDidUpdate(prevProps: ISharedElementTransitionGroupProps, prevState: ISharedElementTransitionGroupProps) {
+        if (!this.state.transitionPending) {
+            return;
+        }
+        if (compareChildren(this.state.children, prevState.children)) {
+            return;
+        }
+        if (!this.incomingRef || !this.outgoingRef) {
+            return;
+        }
 
         this.setState((state) => ({
             transitionPending: false,
         }));
 
         const {outgoingSharedElements} = this.getSharedElements();
-        if (!outgoingSharedElements) return;
+        if (!outgoingSharedElements) {
+            return;
+        }
         const {initialDimensArr, finalDimensArr} = this.getSharedDimens();
         const allChildren = this.state.children;
 
         const newElements = this.createElementsForTransition(outgoingSharedElements, initialDimensArr);
         fireOnce(newElements, 'transitionend', (events: TransitionEvent[]) => {
-            if (!this.incomingRef) return;
+            if (!this.incomingRef) {
+                return;
+            }
 
             this.incomingRef.addEventListener('transitionend', () => {
                 events.forEach((event) => {
@@ -168,8 +109,8 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
                         event.target.remove();
                     }
                 });
-                for (let [key, value] of Array.from(allChildren.entries())) {
-                    let changedChildren = new Map();
+                for (const [key, value] of Array.from(allChildren.entries())) {
+                    const changedChildren = new Map();
                     let element;
                     if (value.props.incoming) {
                         element = React.cloneElement(value, {ref: undefined, incoming: undefined});
@@ -179,16 +120,16 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
                     this.incomingRef = undefined;
                     this.outgoingSharedElements = [];
                     this.incomingSharedElements = [];
-                    this.setState((prevState) => ({
-                        ...prevState,
+                    this.setState((state) => ({
+                        ...state,
                         children: changedChildren,
                         incomingShow: false,
                         outgoingShow: false,
                     }));
                 }
             });
-            this.setState((prevState) => ({
-                ...prevState,
+            this.setState((state) => ({
+                ...state,
                 incomingShow: true,
             }));
         });
@@ -216,38 +157,33 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
 
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                if (!this.outgoingRef) return;
+                if (!this.outgoingRef) {
+                    return;
+                }
 
                 this.outgoingRef.addEventListener('transitionend', () => {
                     newElements.forEach((element, idx) => {
                         element.style.transform = `translate(${invert[idx].x}px, ${invert[idx].y}px) scale(${invert[idx].sx}, ${invert[idx].sy})`;
                     });
                 });
-                this.setState((prevState) => ({
-                    ...prevState,
+                this.setState((state) => ({
+                    ...state,
                     outgoingShow: false,
                 }));
             });
         });
     }
 
-    exit = (key: string) => {
-        this.setState((prevState) => ({
-            ...prevState,
-            children: prevState.children.delete(key),
-        }));
-    };
-
-    render() {
+    public render() {
         const outgoingStyles = {
+            opacity: this.state.outgoingShow ? 1 : 0,
             position: 'absolute',
             transition: 'opacity 300ms ease-out',
-            opacity: this.state.outgoingShow ? 1 : 0,
         };
         const incomingStyles = {
+            opacity: this.state.incomingShow ? 1 : 0,
             position: 'absolute',
             transition: 'opacity 300ms ease-out',
-            opacity: this.state.incomingShow ? 1 : 0,
         };
         const normalStyles = {
             position: 'absolute',
@@ -258,9 +194,7 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
 
         return (
             <div
-                ref={(ref: HTMLDivElement) => {
-                    this.containerRef = ref;
-                }}
+                ref={this.assignContainerRef}
                 style={containerStyles}
             >
                 {Array.from(this.state.children.values()).map((child) => {
@@ -274,6 +208,76 @@ class SharedElementTransitionGroup extends React.Component<SharedElementTransiti
                 })}
             </div>
         );
+    }
+
+    private assignContainerRef = (ref: HTMLDivElement): void => {
+        this.containerRef = ref;
+    }
+
+    private getSharedElements = (): {
+        outgoingSharedElements?: HTMLElement[],
+        incomingSharedElements?: HTMLElement[],
+    } => {
+        if (this.outgoingSharedElements.length && this.incomingSharedElements.length) {
+            return {
+                incomingSharedElements: this.incomingSharedElements,
+                outgoingSharedElements: this.outgoingSharedElements,
+            };
+        }
+        if (!this.outgoingRef || !this.incomingRef) {
+            return {
+                incomingSharedElements: undefined,
+                outgoingSharedElements: undefined,
+            };
+        }
+
+        this.outgoingSharedElements = [];
+        this.incomingSharedElements = [];
+
+        const outgoingMarkedEls = Array.from(this.outgoingRef.querySelectorAll('[id]'));
+        const incomingMarkedEls = Array.from(this.incomingRef.querySelectorAll('[id]'));
+
+        const outgoingSet = new Set(Array.from(outgoingMarkedEls).map((el) => el.id));
+        const incomingSet = new Set(Array.from(incomingMarkedEls).map((el) => el.id));
+
+        for (const element of outgoingMarkedEls) {
+            if (incomingSet.has(element.id) && element instanceof HTMLElement) {
+                this.outgoingSharedElements.push(element);
+            }
+        }
+        for (const element of incomingMarkedEls) {
+            if (outgoingSet.has(element.id) && element instanceof HTMLElement) {
+                this.incomingSharedElements.push(element);
+            }
+        }
+
+        return {outgoingSharedElements: this.outgoingSharedElements, incomingSharedElements: this.incomingSharedElements};
+    }
+
+    private getSharedDimens = () => {
+        const initialDimensArr = this.outgoingSharedElements.map((element) => element.getBoundingClientRect());
+        const finalDimensArr = this.incomingSharedElements.map((element) => element.getBoundingClientRect());
+
+        return {initialDimensArr, finalDimensArr};
+    };
+
+    private createElementsForTransition(outgoingSharedElements: HTMLElement[], initialDimensArr: ClientRect[]) {
+        const newElements: HTMLElement[] = [];
+        outgoingSharedElements.forEach((sharedEl, idx) => {
+            const element = sharedEl.cloneNode(true);
+            if (element instanceof HTMLElement) {
+                element.style.position = 'absolute';
+                element.style.top = (initialDimensArr[idx].top + window.scrollY - this.containerRef.offsetTop).toString();
+                element.style.left = (initialDimensArr[idx].left + window.scrollX - this.containerRef.offsetLeft).toString();
+                element.style.height = (initialDimensArr[idx].height).toString();
+                element.style.width = (initialDimensArr[idx].width).toString();
+                element.style.transformOrigin = '0 0';
+                element.style.transition = 'transform 300ms ease-in-out';
+                newElements.push(element);
+            }
+        });
+
+        return newElements;
     }
 }
 
