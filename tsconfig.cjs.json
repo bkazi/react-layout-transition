@@ -1,23 +1,15 @@
 {
-    "compilerOptions": {
-        "strict": true,
-        "removeComments": true,
-        "jsx": "react",
-        "target": "es5",
-        "lib": [
-            "es5",
-            "es2015",
-            "es2015.iterable",
-            "dom"
-        ],
-        "outDir": "lib",
-        "pretty": true,
-        "noEmitOnError": true
-    },
-    "include": [
-        "./src/**/*"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
+	"compilerOptions": {
+		"strict": true,
+		"removeComments": true,
+		"jsx": "react",
+		"moduleResolution": "node",
+		"target": "es5",
+		"lib": ["es5", "es2015", "es2015.iterable", "dom"],
+		"outDir": "lib",
+		"pretty": true,
+		"noEmitOnError": true
+	},
+	"include": ["./src/**/*"],
+	"exclude": ["node_modules"]
 }
