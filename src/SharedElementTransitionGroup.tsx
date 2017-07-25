@@ -1,7 +1,14 @@
 import * as React from 'react';
+import * as warning from 'warning';
 
 import {childrenToMap, compareChildren} from './utils/children';
 import fireOnce from './utils/fireOnce';
+
+declare var process: {
+    env: {
+        NODE_ENV: string;
+    };
+};
 
 export interface ISharedElementTransitionGroupProps {
     children?: any;
@@ -84,6 +91,14 @@ class SharedElementTransitionGroup extends React.Component<
         prevProps: ISharedElementTransitionGroupProps,
         prevState: ISharedElementTransitionGroupProps,
     ) {
+        if ('production' !== process.env.NODE_ENV) {
+            warning(
+                this.state.transitionPending &&
+                    !!this.incomingRef &&
+                    !!this.outgoingRef,
+                'The refs on the child elements were not defined. Please make sure the innerRef prop has been used in the ref of every child element',
+            );
+        }
         if (!this.state.transitionPending) {
             return;
         }
@@ -280,6 +295,14 @@ class SharedElementTransitionGroup extends React.Component<
             if (outgoingSet.has(element.id) && element instanceof HTMLElement) {
                 this.incomingSharedElements.push(element);
             }
+        }
+
+        if ('production' !== process.env.NODE_ENV) {
+            warning(
+                !!this.outgoingSharedElements.length &&
+                    !!this.incomingSharedElements.length,
+                'No elements were marked as shared. Are you sure this was intended',
+            );
         }
 
         return {
