@@ -17,10 +17,23 @@
         "build:cjs-lib": "tsc -p ./tsconfig.cjs.json"
     },
     "lint-staged": {
-        "src/**/*.ts": ["npm run lint", "npm run format", "git add"],
-        "src/**/*.tsx": ["npm run lint", "npm run format", "git add"]
+        "src/**/*.ts": [
+            "npm run lint",
+            "npm run format",
+            "git add"
+        ],
+        "src/**/*.tsx": [
+            "npm run lint",
+            "npm run format",
+            "git add"
+        ]
     },
-    "files": ["src", "dist", "lib", "es"],
+    "files": [
+        "src",
+        "dist",
+        "lib",
+        "es"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/bkazi/react-layout-transition.git"
