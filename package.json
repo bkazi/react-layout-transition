@@ -22,7 +22,6 @@
     "babel-preset-react": "^6.24.1",
     "babili-webpack-plugin": "^0.1.2",
     "css-loader": "^0.28.4",
-    "enhanced-resolve": "^3.3.0",
     "eslint": "^4.3.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-react": "^7.1.0",
@@ -35,14 +34,14 @@
     "prop-types": "^15.5.10",
     "react-hot-loader": "^3.0.0-beta.7",
     "style-loader": "^0.18.2",
-    "webpack": "^3.3.0",
+    "webpack": "^3.4.1",
     "webpack-bundle-analyzer": "^2.8.3",
-    "webpack-dev-server": "^2.6.0"
+    "webpack-dev-server": "^2.6.1"
   },
   "dependencies": {
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-layout-transition": "0.0.1-alpha.6",
+    "react": "^16.0.0-beta.2",
+    "react-dom": "^16.0.0-beta.2",
+    "react-layout-transition": "0.0.1-alpha.8",
     "react-live": "^1.7.0",
     "react-loadable": "^4.0.3"
   }
