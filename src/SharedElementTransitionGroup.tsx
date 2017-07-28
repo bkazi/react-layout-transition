@@ -91,14 +91,6 @@ class SharedElementTransitionGroup extends React.Component<
         prevProps: ISharedElementTransitionGroupProps,
         prevState: ISharedElementTransitionGroupProps,
     ) {
-        if ('production' !== process.env.NODE_ENV) {
-            warning(
-                this.state.transitionPending &&
-                    !!this.incomingRef &&
-                    !!this.outgoingRef,
-                'The refs on the child elements were not defined. Please make sure the innerRef prop has been used in the ref of every child element',
-            );
-        }
         if (!this.state.transitionPending) {
             return;
         }
