@@ -4,34 +4,97 @@ import {LayoutTransitionGroup} from 'react-layout-transition';
 
 class Demo extends LayoutTransitionGroup {
     state = {
-        count: 3,
+        config: 0,
     };
 
-    increment = () => {
-        // this is where the magic happens ✨
-        this.beginTransition((prevState) => ({
-            count: prevState.count + 1,
-        }), this.listRef);
+    config = (i) => {
+        return () => {
+            this.beginTransition((prevState) => ({
+                config: i,
+            }), [this.barRef, this.listRef], 250, 'cubic-bezier(0.64, 0.13, 0.05, 1.67)');
+        };
     };
 
     render() {
-        const childStyle = (i) => ({
-            textAlign: 'center',
+        const config = this.state.config;
+        const config1 = config === 0;
+        const config2 = config === 1;
+        const count = config1 ? 5 : config2 ? 6 : 7;
+
+        const gridStyle = {
+            height: '240px',
             width: '100%',
-            padding: '16px',
-            backgroundColor: `rgb(${(60*(i+1)) % 255}, 50, ${(40 * (i+1)) % 255})`,
+            maxWidth: '300px',
+            margin: '0 auto',
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            flexGrow: '3',
+        };
+
+        const horizontalStyle = {
+            width: '100%',
+            height: '80px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+        };
+
+        const barStyle = {
+            height: '80px',
+        };
+
+        const childStyle = (i) => ({
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            backgroundColor: 'rgb(230, 150, 0)',
+            margin: '16px',
         });
+
+        const buttonHolder = {
+            backgroundColor: 'rgb(150, 200, 230)',
+            height: '64px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+        };
+
+        const buttonStyle = {
+            height: '48px',
+            flexGrow: '1',
+            margin: '8px',
+            backgroundColor: 'white',
+            border: '0',
+        };
 
         return (
             <div>
-                <button onClick={this.increment}>Click Me</button>
+                <div style={buttonHolder}>
+                    <button style={buttonStyle} onClick={this.config(0)}>0</button>
+                    <button style={buttonStyle} onClick={this.config(1)}>1</button>
+                    <button style={buttonStyle} onClick={this.config(2)}>2</button>
+                </div>
                 <div
-                    className='vertical-flex'
+                    style={horizontalStyle}
+                    ref={(ref) => {
+                        this.barRef = ref;
+                    }}
+                >
+                    <div style={{...barStyle, flexGrow: 1, backgroundColor: 'rgb(200, 0, 0)'}}></div>
+                    <div style={{...barStyle, flexGrow: config1 ? 1 : config2 ? 5 : 1, backgroundColor: 'rgb(0, 200, 0)'}}></div>
+                    <div style={{...barStyle, flexGrow: config1 ? 1 : config2 ? 5 : 10, backgroundColor: 'rgb(0, 0, 200)'}}></div>
+                </div>
+                <div
+                    style={gridStyle}
                     ref={(ref) => {
                         this.listRef = ref;
                     }}
                 >
-                    {[...Array(this.state.count).keys()].map((i) => <div style={childStyle(i)} key={i}>{i}</div>)}
+                    {[...Array(count).keys()].map((i) => <div style={childStyle(i)} key={i}></div>)}
                 </div>
             </div>
         );
@@ -43,36 +106,112 @@ const codeString = `class Demo extends LayoutTransitionGroup {
         super(props);
 
         this.state = {
-            count: 3,
+            config: 0,
         };
-        this.increment = this.increment.bind(this);
+        this.config = this.config.bind(this);
     }
 
-    increment() {
-        // this is where the magic happens ✨
-        this.beginTransition((prevState) => ({
-            count: prevState.count + 1,
-        }), this.listRef);
+    config(i) {
+        return () => {
+            // this is where the magic happens ✨
+            this.beginTransition((prevState) => ({
+                config: i,
+            }), [this.barRef, this.listRef], 250, 'cubic-bezier(0.64, 0.13, 0.05, 1.67)');
+        };
     };
 
     render() {
-        const childStyle = (i) => ({
-            textAlign: 'center',
+        const config = this.state.config;
+        const config1 = config === 0;
+        const config2 = config === 1;
+        const count = config1 ? 5 : config2 ? 6 : 7;
+
+        const gridStyle = {
+            height: '240px',
             width: '100%',
-            padding: '16px',
-            backgroundColor: \`rgb(\${(60*(i+1)) % 255}, 50, \${(40 * (i+1)) % 255})\`,
-        });
+            maxWidth: '300px',
+            margin: '0 auto',
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            flexGrow: '3',
+        };
+
+        const horizontalStyle = {
+            width: '100%',
+            height: '80px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+        };
+
+        const barStyle = {
+            height: '80px',
+        };
+
+        const childStyle = {
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            backgroundColor: 'rgb(230, 150, 0)',
+            margin: '16px',
+        };
+
+        const buttonHolder = {
+            backgroundColor: 'rgb(150, 200, 230)',
+            height: '64px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+        };
+
+        const buttonStyle = {
+            height: '48px',
+            flexGrow: '1',
+            margin: '8px',
+            backgroundColor: 'white',
+            border: '0',
+        };
+
+        const verticalFlex = {
+            height: '75%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+        };
+
+        const pStyle = {
+            textAlign: 'center',
+            flexGrow: config1 ? 0 : config2 ? 2 : 4,
+        };
 
         return (
             <div>
-                <button onClick={this.increment}>Click Me</button>
+                <div style={buttonHolder}>
+                    <button style={buttonStyle} onClick={this.config(0)}>0</button>
+                    <button style={buttonStyle} onClick={this.config(1)}>1</button>
+                    <button style={buttonStyle} onClick={this.config(2)}>2</button>
+                </div>
                 <div
-                    className='vertical-flex'
+                    style={horizontalStyle}
+                    ref={(ref) => {
+                        this.barRef = ref;
+                    }}
+                >
+                    <div style={{...barStyle, flexGrow: 1, backgroundColor: 'rgb(200, 0, 0)'}}></div>
+                    <div style={{...barStyle, flexGrow: config1 ? 1 : config2 ? 5 : 1, backgroundColor: 'rgb(0, 200, 0)'}}></div>
+                    <div style={{...barStyle, flexGrow: config1 ? 1 : config2 ? 5 : 10, backgroundColor: 'rgb(0, 0, 200)'}}></div>
+                </div>
+                <div
+                    style={gridStyle}
                     ref={(ref) => {
                         this.listRef = ref;
                     }}
                 >
-                    {Array.from(Array(this.state.count).keys()).map((i) => <div style={childStyle(i)} key={i}>{i}</div>)}
+                    {Array.from(Array(count).keys()).map((i) => <div style={childStyle} key={i}></div>)}
                 </div>
             </div>
         );
