@@ -147,6 +147,8 @@ class Demo extends LayoutTransitionGroup {
 				);
 		}
 }
+```
+
 
 ## SharedElementTransitionGroup
 
