@@ -31,7 +31,7 @@ You can also include it directly in the browser via the [unpkg CDN](https://unpk
 ## LayoutTransitionGroup
 
 A component that animates state based changes in layout in certain parts of your view.<br>
-Currently the implementation does not accomodate a very general use case
+Can handle the addition and removal of DOM nodes (as shown below)
 
 ![LayoutTransitionDemo](assets/demoGifs/layoutTransitionDemo.gif)
 
