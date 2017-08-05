@@ -28,93 +28,6 @@ You can also include it directly in the browser via the [unpkg CDN](https://unpk
 <script src='https://unpkg.com/react-layout-transition/dist/react-layout-transition.min.js'></script>
 ```
 
-## SharedElementTransitionGroup
-
-A container around the views to transition between that animates shared elements, between their initial and final position.
-It classifies elements as shared if you mark them with the same id in both the intial and final layout component and does the rest for you.
-
-![SharedElementDemo](assets/demoGifs/sharedElementDemo.gif)
-
-```jsx
-class Demo extends React.Component {
-    state = {
-        switch: true,
-    };
-
-    toggle = () => {
-        this.setState((prevState) => ({
-            switch: !prevState.switch,
-        }));
-    };
-
-    render() {
-        return (
-            <div>
-                <button onClick={this.toggle}>Click Me</button>
-                <SharedElementTransitionGroup>
-                    {this.state.switch && <Page1 />}
-                    {!this.state.switch && <Page2 />}
-                </SharedElementTransitionGroup>
-            </div>
-        );
-    }
-}
-
-class Page1 extends React.Component {
-    render() {
-        const cont = {
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            overflow: 'hidden',
-        };
-
-        const img1Style = {
-            maxWidth: '100%',
-            height: 'auto',
-        };
-
-        const img2Style = {
-            maxWidth: '100%',
-            height: 'auto',
-        };
-
-        return (
-            <div style={this.props.style} ref={this.props.innerRef}>
-                <p>...</p>
-                <div style={cont}>
-                    // this is where the magic happens ✨
-                    <img id="hero" style={img1Style} src='https://68.media.tumblr.com/4d1f173744a32bb4b35a2d5d0babff74/tumblr_mnh29fxz111st5lhmo1_1280.jpg' />
-                    <img id="another-one" style={img2Style} src='https://images.unsplash.com/13/unsplash_5239d6c04342c_1.JPG' />
-                </div>
-                <p>...</p>
-            </div>
-        );
-    }
-}
-
-class Page2 extends React.Component {
-    render() {
-        const imgStyle = {
-            width: '100%',
-            height: 'auto',
-        };
-
-        return (
-            <div style={this.props.style} ref={this.props.innerRef}>
-                // this is where the magic happens ✨
-                <img id="hero" style={imgStyle} src='https://68.media.tumblr.com/4d1f173744a32bb4b35a2d5d0babff74/tumblr_mnh29fxz111st5lhmo1_1280.jpg' />
-                <p>...</p>
-                <img id="another-one" style={imgStyle} src='https://images.unsplash.com/13/unsplash_5239d6c04342c_1.JPG' />
-            </div>
-        );
-    }
-}
-
-```
-
 ## LayoutTransitionGroup
 
 A component that animates state based changes in layout in certain parts of your view.<br>
@@ -233,6 +146,91 @@ class Demo extends LayoutTransitionGroup {
 						</div>
 				);
 		}
+}
+
+## SharedElementTransitionGroup
+
+A container around the views to transition between that animates shared elements, between their initial and final position.
+It classifies elements as shared if you mark them with the same id in both the intial and final layout component and does the rest for you.
+
+![SharedElementDemo](assets/demoGifs/sharedElementDemo.gif)
+
+```jsx
+class Demo extends React.Component {
+    state = {
+        switch: true,
+    };
+
+    toggle = () => {
+        this.setState((prevState) => ({
+            switch: !prevState.switch,
+        }));
+    };
+
+    render() {
+        return (
+            <div>
+                <button onClick={this.toggle}>Click Me</button>
+                <SharedElementTransitionGroup>
+                    {this.state.switch && <Page1 />}
+                    {!this.state.switch && <Page2 />}
+                </SharedElementTransitionGroup>
+            </div>
+        );
+    }
+}
+
+class Page1 extends React.Component {
+    render() {
+        const cont = {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            overflow: 'hidden',
+        };
+
+        const img1Style = {
+            maxWidth: '100%',
+            height: 'auto',
+        };
+
+        const img2Style = {
+            maxWidth: '100%',
+            height: 'auto',
+        };
+
+        return (
+            <div style={this.props.style} ref={this.props.innerRef}>
+                <p>...</p>
+                <div style={cont}>
+                    // this is where the magic happens ✨
+                    <img id="hero" style={img1Style} src='https://68.media.tumblr.com/4d1f173744a32bb4b35a2d5d0babff74/tumblr_mnh29fxz111st5lhmo1_1280.jpg' />
+                    <img id="another-one" style={img2Style} src='https://images.unsplash.com/13/unsplash_5239d6c04342c_1.JPG' />
+                </div>
+                <p>...</p>
+            </div>
+        );
+    }
+}
+
+class Page2 extends React.Component {
+    render() {
+        const imgStyle = {
+            width: '100%',
+            height: 'auto',
+        };
+
+        return (
+            <div style={this.props.style} ref={this.props.innerRef}>
+                // this is where the magic happens ✨
+                <img id="hero" style={imgStyle} src='https://68.media.tumblr.com/4d1f173744a32bb4b35a2d5d0babff74/tumblr_mnh29fxz111st5lhmo1_1280.jpg' />
+                <p>...</p>
+                <img id="another-one" style={imgStyle} src='https://images.unsplash.com/13/unsplash_5239d6c04342c_1.JPG' />
+            </div>
+        );
+    }
 }
 
 ```
