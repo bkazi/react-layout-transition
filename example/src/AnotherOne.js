@@ -25,6 +25,7 @@ class AnotherOne extends LayoutTransitionGroup {
             width: '100%',
             maxWidth: '300px',
             margin: '0 auto',
+            paddingTop: config1 ? '20px' : config2 ? '100px' : ' 200px',
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'wrap',
