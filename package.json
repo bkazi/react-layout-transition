@@ -27,7 +27,7 @@
     "eslint-plugin-react": "^7.1.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
-    "html-webpack-plugin": "^2.29.0",
+    "html-webpack-plugin": "^2.30.1",
     "inline-manifest-webpack-plugin": "^3.0.1",
     "loglevel": "^1.4.1",
     "prepack-webpack-plugin": "^1.1.0",
@@ -35,14 +35,14 @@
     "react-hot-loader": "^3.0.0-beta.7",
     "style-loader": "^0.18.2",
     "webpack": "^3.4.1",
-    "webpack-bundle-analyzer": "^2.8.3",
+    "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.6.1"
   },
   "dependencies": {
-    "react": "^16.0.0-beta.2",
-    "react-dom": "^16.0.0-beta.2",
+    "react": "^16.0.0-beta.3",
+    "react-dom": "^16.0.0-beta.3",
     "react-layout-transition": "0.0.1-alpha.8",
     "react-live": "^1.7.0",
-    "react-loadable": "^4.0.3"
+    "react-loadable": "^4.0.4"
   }
 }
