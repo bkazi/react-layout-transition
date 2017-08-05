@@ -1,7 +1,7 @@
 import React from 'react';
 import {LayoutTransitionGroup} from '../../src/index';
 
-class AnotherOne extends LayoutTransitionGroup {
+class LayoutTransitionExample extends LayoutTransitionGroup {
     state = {
         config: 0,
     };
@@ -113,4 +113,4 @@ class AnotherOne extends LayoutTransitionGroup {
     }
 }
 
-export default AnotherOne;
+export default LayoutTransitionExample;
