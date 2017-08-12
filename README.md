@@ -105,14 +105,7 @@ class Demo extends LayoutTransitionGroup {
 			backgroundColor: 'white',
 			border: '0',
 		};
-
-		const verticalFlex = {
-			height: '75%',
-			display: 'flex',
-			flexDirection: 'column',
-			justifyContent: 'center',
-		};
-
+		
 		return (
 			<div>
 				<div style={buttonHolder}>
