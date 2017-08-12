@@ -113,11 +113,6 @@ class Demo extends LayoutTransitionGroup {
 			justifyContent: 'center',
 		};
 
-		const pStyle = {
-			textAlign: 'center',
-			flexGrow: config1 ? 0 : config2 ? 2 : 4,
-		};
-
 		return (
 			<div>
 				<div style={buttonHolder}>
