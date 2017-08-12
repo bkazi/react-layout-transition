@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as warning from 'warning';
 
 import {childrenToMap, compareChildren} from './utils/children';
+import createDummyElements from './utils/createDummyElements';
 import fireOnce from './utils/fireOnce';
 
 declare var process: {
@@ -112,9 +113,10 @@ class SharedElementTransitionGroup extends React.Component<
         const {initialDimensArr, finalDimensArr} = this.getSharedDimens();
         const allChildren = this.state.children;
 
-        const newElements = this.createElementsForTransition(
+        const newElements = createDummyElements(
             outgoingSharedElements,
             initialDimensArr,
+            this.containerRef,
         );
         fireOnce(newElements, 'transitionend', (events: TransitionEvent[]) => {
             if (!this.incomingRef) {
@@ -313,32 +315,6 @@ class SharedElementTransitionGroup extends React.Component<
 
         return {initialDimensArr, finalDimensArr};
     };
-
-    private createElementsForTransition(
-        outgoingSharedElements: HTMLElement[],
-        initialDimensArr: ClientRect[],
-    ) {
-        const newElements: HTMLElement[] = [];
-        outgoingSharedElements.forEach((sharedEl, idx) => {
-            const element = sharedEl.cloneNode(true);
-            if (element instanceof HTMLElement) {
-                element.style.position = 'absolute';
-                element.style.top = (initialDimensArr[idx].top +
-                    window.scrollY -
-                    this.containerRef.offsetTop).toString();
-                element.style.left = (initialDimensArr[idx].left +
-                    window.scrollX -
-                    this.containerRef.offsetLeft).toString();
-                element.style.height = initialDimensArr[idx].height.toString();
-                element.style.width = initialDimensArr[idx].width.toString();
-                element.style.transformOrigin = '0 0';
-                element.style.transition = 'transform 300ms ease-in-out';
-                newElements.push(element);
-            }
-        });
-
-        return newElements;
-    }
 }
 
 export default SharedElementTransitionGroup;
