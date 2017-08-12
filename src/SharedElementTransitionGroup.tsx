@@ -3,6 +3,7 @@ import * as warning from 'warning';
 
 import {childrenToMap, compareChildren} from './utils/children';
 import createDummyElements from './utils/createDummyElements';
+import createInvertObject from './utils/createInvertObject';
 import fireOnce from './utils/fireOnce';
 import {getDimensArray} from './utils/getDimens';
 
@@ -164,49 +165,23 @@ class SharedElementTransitionGroup extends React.Component<
             }));
         });
 
-        const invert: Array<{
-            sx: number;
-            sy: number;
-            x: number;
-            y: number;
-        }> = [];
-
         newElements.forEach((element, idx) => {
             this.containerRef.appendChild(element);
-            invert[idx] = {
-                sx: 1,
-                sy: 1,
-                x: 0,
-                y: 0,
-            };
-            invert[idx].sx =
-                finalDimensArr[idx].width / initialDimensArr[idx].width;
-            invert[idx].sy =
-                finalDimensArr[idx].height / initialDimensArr[idx].height;
-            invert[idx].x =
-                finalDimensArr[idx].left - initialDimensArr[idx].left;
-            invert[idx].y = finalDimensArr[idx].top - initialDimensArr[idx].top;
         });
 
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                if (!this.outgoingRef) {
-                    return;
-                }
-
-                this.outgoingRef.addEventListener('transitionend', () => {
-                    newElements.forEach((element, idx) => {
-                        element.style.transform = `translate(${invert[idx]
-                            .x}px, ${invert[idx].y}px) scale(${invert[idx]
-                            .sx}, ${invert[idx].sy})`;
-                    });
-                });
-                this.setState(state => ({
-                    ...state,
-                    outgoingShow: false,
-                }));
+        const invert = createInvertObject(initialDimensArr, finalDimensArr);
+        this.outgoingRef.addEventListener('transitionend', () => {
+            newElements.forEach((element, idx) => {
+                element.style.transform = `translate(${invert[idx]
+                    .x}px, ${invert[idx].y}px) scale(${invert[idx]
+                    .sx}, ${invert[idx].sy})`;
             });
         });
+
+        this.setState(state => ({
+            ...state,
+            outgoingShow: false,
+        }));
     }
 
     public render() {
