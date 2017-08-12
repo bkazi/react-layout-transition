@@ -4,6 +4,7 @@ import * as warning from 'warning';
 import {childrenToMap, compareChildren} from './utils/children';
 import createDummyElements from './utils/createDummyElements';
 import fireOnce from './utils/fireOnce';
+import {getDimensArray} from './utils/getDimens';
 
 declare var process: {
     env: {
@@ -107,16 +108,22 @@ class SharedElementTransitionGroup extends React.Component<
         }));
 
         const {outgoingSharedElements} = this.getSharedElements();
-        if (!outgoingSharedElements) {
+        if (!outgoingSharedElements.length) {
             return;
         }
-        const {initialDimensArr, finalDimensArr} = this.getSharedDimens();
+        const initialDimensArr = getDimensArray(
+            this.outgoingSharedElements,
+            this.containerRef,
+        );
+        const finalDimensArr = getDimensArray(
+            this.incomingSharedElements,
+            this.containerRef,
+        );
         const allChildren = this.state.children;
 
         const newElements = createDummyElements(
             outgoingSharedElements,
             initialDimensArr,
-            this.containerRef,
         );
         fireOnce(newElements, 'transitionend', (events: TransitionEvent[]) => {
             if (!this.incomingRef) {
@@ -244,8 +251,8 @@ class SharedElementTransitionGroup extends React.Component<
     };
 
     private getSharedElements = (): {
-        outgoingSharedElements?: HTMLElement[];
-        incomingSharedElements?: HTMLElement[];
+        outgoingSharedElements: HTMLElement[];
+        incomingSharedElements: HTMLElement[];
     } => {
         if (
             this.outgoingSharedElements.length &&
@@ -258,8 +265,8 @@ class SharedElementTransitionGroup extends React.Component<
         }
         if (!this.outgoingRef || !this.incomingRef) {
             return {
-                incomingSharedElements: undefined,
-                outgoingSharedElements: undefined,
+                incomingSharedElements: [],
+                outgoingSharedElements: [],
             };
         }
 
@@ -303,17 +310,6 @@ class SharedElementTransitionGroup extends React.Component<
             incomingSharedElements: this.incomingSharedElements,
             outgoingSharedElements: this.outgoingSharedElements,
         };
-    };
-
-    private getSharedDimens = () => {
-        const initialDimensArr = this.outgoingSharedElements.map(element =>
-            element.getBoundingClientRect(),
-        );
-        const finalDimensArr = this.incomingSharedElements.map(element =>
-            element.getBoundingClientRect(),
-        );
-
-        return {initialDimensArr, finalDimensArr};
     };
 }
 
