@@ -136,9 +136,7 @@ class SharedElementTransitionGroup extends React.Component<
 
             this.incomingRef.addEventListener('transitionend', () => {
                 events.forEach(event => {
-                    if (event.target instanceof HTMLElement) {
-                        event.target.remove();
-                    }
+                    (event.target as HTMLElement).remove();
                 });
                 for (const [key, value] of Array.from(allChildren.entries())) {
                     const changedChildren = new Map();
