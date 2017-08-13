@@ -32,7 +32,7 @@ class SharedElementTransitionGroup extends React.Component<
     private outgoingRef?: HTMLElement;
     private incomingSharedElements: HTMLElement[] = [];
     private incomingRef?: HTMLElement;
-    private containerRef: HTMLDivElement;
+    private containerRef: HTMLDivElement | null;
 
     constructor(props: ISharedElementTransitionGroupProps) {
         super();
@@ -103,6 +103,9 @@ class SharedElementTransitionGroup extends React.Component<
         if (!this.incomingRef || !this.outgoingRef) {
             return;
         }
+        if (!this.containerRef) {
+            return;
+        }
 
         this.setState(state => ({
             transitionPending: false,
@@ -166,7 +169,9 @@ class SharedElementTransitionGroup extends React.Component<
         });
 
         newElements.forEach((element, idx) => {
-            this.containerRef.appendChild(element);
+            if (this.containerRef) {
+                this.containerRef.appendChild(element);
+            }
         });
 
         const invert = createInvertObject(initialDimensArr, finalDimensArr);
@@ -203,7 +208,12 @@ class SharedElementTransitionGroup extends React.Component<
         };
 
         return (
-            <div ref={this.assignContainerRef} style={containerStyles}>
+            <div
+                ref={ref => {
+                    this.containerRef = ref;
+                }}
+                style={containerStyles}
+            >
                 {Array.from(this.state.children.values()).map(child => {
                     if (child.props.outgoing) {
                         return React.cloneElement(child, {
@@ -220,10 +230,6 @@ class SharedElementTransitionGroup extends React.Component<
             </div>
         );
     }
-
-    private assignContainerRef = (ref: HTMLDivElement): void => {
-        this.containerRef = ref;
-    };
 
     private getSharedElements = (): {
         outgoingSharedElements: HTMLElement[];
