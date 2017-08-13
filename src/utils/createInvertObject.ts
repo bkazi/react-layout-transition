@@ -1,4 +1,21 @@
 export default function createInvertObject(
+    first: ClientRect,
+    last: ClientRect,
+): {
+    sx: number;
+    sy: number;
+    x: number;
+    y: number;
+} {
+    return {
+        sx: last.width / first.width,
+        sy: last.height / first.height,
+        x: last.left - first.left,
+        y: last.top - first.top,
+    };
+}
+
+export function createInvertObjectArray(
     first: ClientRect[],
     last: ClientRect[],
 ): Array<{
@@ -7,10 +24,7 @@ export default function createInvertObject(
     x: number;
     y: number;
 }> {
-    return first.map((dimens, idx: number) => ({
-        sx: last[idx].width / first[idx].width,
-        sy: last[idx].height / first[idx].height,
-        x: last[idx].left - first[idx].left,
-        y: last[idx].top - first[idx].top,
-    }));
+    return first.map((dimens, idx: number) =>
+        createInvertObject(dimens, last[idx]),
+    );
 }

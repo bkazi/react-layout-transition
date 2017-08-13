@@ -3,7 +3,7 @@ import * as warning from 'warning';
 
 import {childrenToMap, compareChildren} from './utils/children';
 import createDummyElements from './utils/createDummyElements';
-import createInvertObject from './utils/createInvertObject';
+import {createInvertObjectArray} from './utils/createInvertObject';
 import fireOnce from './utils/fireOnce';
 import {getDimensArray} from './utils/getDimens';
 
@@ -172,7 +172,10 @@ class SharedElementTransitionGroup extends React.Component<
             }
         });
 
-        const invert = createInvertObject(initialDimensArr, finalDimensArr);
+        const invert = createInvertObjectArray(
+            initialDimensArr,
+            finalDimensArr,
+        );
         this.outgoingRef.addEventListener('transitionend', () => {
             newElements.forEach((element, idx) => {
                 element.style.transform = `translate(${invert[idx]

@@ -1,7 +1,9 @@
 import * as React from 'react';
 import * as warning from 'warning';
 
+import createInvertObject from './utils/createInvertObject';
 import fireOnce from './utils/fireOnce';
+import getDimens from './utils/getDimens';
 
 declare var process: {
     env: {
@@ -59,7 +61,7 @@ class LayoutTransitionGroup extends React.Component<
             if (child instanceof HTMLElement) {
                 const key = child.dataset.layoutKey;
                 if (key) {
-                    this.finalDimens.set(key, child.getBoundingClientRect());
+                    this.finalDimens.set(key, getDimens(child));
                 }
             }
         });
@@ -81,12 +83,9 @@ class LayoutTransitionGroup extends React.Component<
                 if (!finalDimen) {
                     return;
                 }
-                const x = initialDimen.left - finalDimen.left;
-                const y = initialDimen.top - finalDimen.top;
-                const sx = initialDimen.width / finalDimen.width;
-                const sy = initialDimen.height / finalDimen.height;
+                const invert = createInvertObject(finalDimen, initialDimen);
                 child.style.transition = '';
-                child.style.transform = `translate(${x}px, ${y}px) scale(${sx}, ${sy})`;
+                child.style.transform = `translate(${invert.x}px, ${invert.y}px) scale(${invert.sx}, ${invert.sy})`;
                 child.style.transformOrigin = '0 0';
             }
         });
@@ -196,7 +195,7 @@ class LayoutTransitionGroup extends React.Component<
             const key = `.${index}`;
             child.dataset.layoutKey = key;
 
-            this.initialDimens.set(key, child.getBoundingClientRect());
+            this.initialDimens.set(key, getDimens(child));
         });
 
         // Update state

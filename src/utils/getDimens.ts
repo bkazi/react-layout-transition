@@ -1,13 +1,25 @@
-function getDimens(element: HTMLElement, container: HTMLElement): ClientRect {
+function getDimens(element: HTMLElement, container?: HTMLElement): ClientRect {
     const clientRect = element.getBoundingClientRect();
-    const newObj = {
-        bottom: clientRect.bottom,
-        height: clientRect.height,
-        left: clientRect.left + window.pageXOffset - container.offsetLeft,
-        right: clientRect.right,
-        top: clientRect.top + window.pageYOffset - container.offsetTop,
-        width: clientRect.width,
-    };
+    let newObj;
+    if (container) {
+        newObj = {
+            bottom: clientRect.bottom,
+            height: clientRect.height,
+            left: clientRect.left + window.pageXOffset - container.offsetLeft,
+            right: clientRect.right,
+            top: clientRect.top + window.pageYOffset - container.offsetTop,
+            width: clientRect.width,
+        };
+    } else {
+        newObj = {
+            bottom: clientRect.bottom,
+            height: clientRect.height,
+            left: clientRect.left + window.pageXOffset,
+            right: clientRect.right,
+            top: clientRect.top + window.pageYOffset,
+            width: clientRect.width,
+        };
+    }
     return newObj;
 }
 
