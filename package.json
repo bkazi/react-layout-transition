@@ -8,13 +8,32 @@
     "scripts": {
         "serve": "webpack-dev-server --config ./example/webpack.config.js",
         "lint": "tslint -c ./tslint.json -p tsconfig.json --type-check ./src/**/*",
+        "jest": "jest",
+        "test": "run-s lint jest",
+        "coverage": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
         "format": "prettier --single-quote --trailing-comma all --no-bracket-spacing --tab-width 4 --write \"src/**/*.*\"",
         "precommit": "lint-staged",
         "prepare": "npm run build",
-        "build": "npm-run-all --parallel build:*",
+        "build": "run-p build:*",
         "build:dist": "webpack --config webpack.config.js && NODE_ENV=\"PRODUCTION\" webpack --config webpack.config.js",
         "build:es-lib": "tsc -p ./tsconfig.es.json",
         "build:cjs-lib": "tsc -p ./tsconfig.cjs.json"
+    },
+    "jest": {
+        "transform": {
+            "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+        },
+        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "json",
+            "jsx"
+        ],
+        "coverageReporters": [
+            "lcov"
+        ]
     },
     "lint-staged": {
         "src/**/*.ts": [
@@ -41,6 +60,7 @@
     "author": "Bilal Kazi",
     "license": "MIT",
     "devDependencies": {
+        "@types/jest": "^20.0.6",
         "@types/react": "^15.6.0",
         "@types/react-dom": "^15.5.1",
         "@types/warning": "^3.0.0",
@@ -61,6 +81,7 @@
         "eslint-plugin-react": "^7.1.0",
         "html-webpack-plugin": "^2.29.0",
         "husky": "^0.14.3",
+        "jest": "^20.0.4",
         "lint-staged": "^4.0.2",
         "loglevel": "^1.4.1",
         "npm-run-all": "^4.0.2",
@@ -69,6 +90,7 @@
         "react": "^16.0.0-beta.2",
         "react-dom": "^16.0.0-beta.2",
         "react-hot-loader": "^3.0.0-beta.7",
+        "ts-jest": "^20.0.10",
         "tslint": "^5.5.0",
         "tslint-config-prettier": "^1.1.0",
         "tslint-react": "^3.1.0",
