@@ -3,6 +3,9 @@
 ![Logo](assets/logo.png)
 Trying to make layout transitions simple
 
+[![Build Status](https://travis-ci.org/bkazi/react-layout-transition.svg?branch=testing)](https://travis-ci.org/bkazi/react-layout-transition)
+[![Coverage Status](https://coveralls.io/repos/bkazi/react-layout-transition/badge.svg?branch=testing)](https://coveralls.io/r/bkazi/react-layout-transition?branch=testing)
+
 Check it out at [https://react-layout-transition.surge.sh/](https://react-layout-transition.surge.sh)
 
 This project aims to provide React components that can :sparkles:_automagically_:sparkles: animate between changes in your layout.
