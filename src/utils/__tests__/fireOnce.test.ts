@@ -1,4 +1,4 @@
-import fireOnce from '../fireOnce';
+import {fireOnce} from '../';
 
 test('function should only fire once (with single element)', () => {
     const mockCallback = jest.fn();

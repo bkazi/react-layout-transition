@@ -1,9 +1,7 @@
 import * as React from 'react';
 import * as warning from 'warning';
 
-import createInvertObject from './utils/createInvertObject';
-import fireOnce from './utils/fireOnce';
-import getDimens from './utils/getDimens';
+import {createInvertObject, fireOnce, getDimens} from './utils';
 
 declare var process: {
     env: {

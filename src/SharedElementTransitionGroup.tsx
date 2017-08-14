@@ -1,11 +1,14 @@
 import * as React from 'react';
 import * as warning from 'warning';
 
-import {childrenToMap, compareChildren} from './utils/children';
-import createDummyElements from './utils/createDummyElements';
-import {createInvertObjectArray} from './utils/createInvertObject';
-import fireOnce from './utils/fireOnce';
-import {getDimensArray} from './utils/getDimens';
+import {
+    childrenToMap,
+    compareChildren,
+    createDummyElements,
+    createInvertObjectArray,
+    fireOnce,
+    getDimensArray,
+} from './utils';
 
 declare var process: {
     env: {

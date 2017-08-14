@@ -1,4 +1,4 @@
-import createDummyElements from '../createDummyElements';
+import {createDummyElements} from '../';
 
 test('should create one dummy element', () => {
     const elements = [document.createElement('div')];
