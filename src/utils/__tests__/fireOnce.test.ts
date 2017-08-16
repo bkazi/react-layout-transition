@@ -1,7 +1,7 @@
 import {fireOnce} from '../';
 
-test('function should only fire once (with single element)', () => {
-    const mockCallback = jest.fn();
+it('function should only fire once (with single element)', () => {
+    const mockCallback = jasmine.createSpy('callback');
 
     const element = document.createElement('div');
 
@@ -9,11 +9,11 @@ test('function should only fire once (with single element)', () => {
 
     element.click();
 
-    expect(mockCallback.mock.calls.length).toBe(1);
+    expect(mockCallback.calls.count()).toBe(1);
 });
 
-test('function should only fire once (with multiple elements)', () => {
-    const mockCallback = jest.fn();
+it('function should only fire once (with multiple elements)', () => {
+    const mockCallback = jasmine.createSpy('callback');
 
     const elements: HTMLElement[] = [];
     for (let i = 0; i < 2; i++) {
@@ -26,5 +26,5 @@ test('function should only fire once (with multiple elements)', () => {
         el.click();
     }
 
-    expect(mockCallback.mock.calls.length).toBe(1);
+    expect(mockCallback.calls.count()).toBe(1);
 });
