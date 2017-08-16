@@ -45,3 +45,28 @@ describe('createDummyElements (single)', () => {
         expect(style.height).toEqual(`${height}px`);
     });
 });
+
+describe('createDummyElements (single, with transition string)', () => {
+    it('should have the correct transition string passed' , () => {
+        const transitionString = 'transition 0.5s ease-in 0s';
+        const element = document.createElement('div');
+        document.body.appendChild(element);
+
+        const elements = [element];
+        
+        const returned = createDummyElements(
+            elements,
+            elements.map(el => el.getBoundingClientRect()),
+            transitionString
+        );
+
+        const returnedEl = returned[0];
+        document.body.appendChild(returnedEl);
+        const style = getComputedStyle(returnedEl);
+
+        expect(style.transition).toBe(transitionString);
+
+        elements.forEach(el => el.remove());
+        returnedEl.remove();
+    });
+});
