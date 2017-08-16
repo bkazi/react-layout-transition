@@ -70,6 +70,7 @@
         "karma": "^1.7.0",
         "karma-chrome-launcher": "^2.2.0",
         "karma-jasmine": "^1.1.0",
+        "karma-phantomjs-launcher": "^1.0.4",
         "karma-typescript": "^3.0.5",
         "karma-typescript-es6-transform": "^1.0.2",
         "lint-staged": "^4.0.3",
