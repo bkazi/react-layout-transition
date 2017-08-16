@@ -1,11 +1,13 @@
 language: node_js
 node_js:
   - "7"
-after_success: 'npm run coverage'
+# after_success: 'npm run coverage'
 branches:
   - master
   - gh-pages
   - testing
+addons:
+  chrome: stable
 cache:
   directories:
     - "node_modules"
