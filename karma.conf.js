@@ -10,7 +10,8 @@ module.exports = function(config) {
             "**/*.tsx": ["karma-typescript"],
         },
         reporters: ["progress", "karma-typescript"],
-        // browsers: ["Chrome"],
+        browsers: ["PhantomJS", "ChromeHeadless"],
+        singleRun: true,
         karmaTypescriptConfig: {
             tsconfig: "./tsconfig.test.json",
             bundlerOptions: {
