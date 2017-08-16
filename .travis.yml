@@ -5,6 +5,7 @@ after_success: 'npm run coverage'
 branches:
   - master
   - gh-pages
+  - testing
 cache:
   directories:
     - "node_modules"
