@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"removeComments": true,
+		"moduleResolution": "node",
+		"target": "es5",
+		"jsx": "react",
+		"sourceMap": true,
+		"lib": ["es2015", "dom"]
+	},
+	"include": ["./src/**/*"],
+	"exclude": ["node_modules"]
+}
