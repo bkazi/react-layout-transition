@@ -2,15 +2,23 @@ module.exports = function(config) {
     config.set({
         frameworks: ["jasmine", "karma-typescript"],
         files: [
+            { pattern: "tests/**/*.ts" },
+            { pattern: "tests/**/*.tsx" },
             { pattern: "src/**/*.ts" },
             { pattern: "src/**/*.tsx" },
         ],
         preprocessors: {
-            "**/*.ts": ["karma-typescript"],
-            "**/*.tsx": ["karma-typescript"],
+            "src/**/*.ts": ["karma-typescript", "coverage"],
+            "src/**/*.tsx": ["karma-typescript", "coverage"],
+            "tests/**/*.ts": ["karma-typescript"], 
+            "tests/**/*.tsx": ["karma-typescript"],
         },
-        reporters: ["progress", "karma-typescript"],
+        reporters: ["progress", "karma-typescript", "coverage"],
         browsers: ["PhantomJS", "ChromeHeadless"],
+        coverageReporter: {
+            type : 'lcovonly',
+            dir : 'coverage/',
+        },
         singleRun: true,
         karmaTypescriptConfig: {
             tsconfig: "./tsconfig.test.json",

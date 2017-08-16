@@ -10,7 +10,7 @@
         "lint": "tslint -c ./tslint.json -p tsconfig.json --type-check ./src/**/*",
         "karma": "karma start",
         "test": "run-s lint karma",
-        "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+        "coverage": "cat ./coverage/Headless**/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
         "format": "prettier --single-quote --trailing-comma all --no-bracket-spacing --tab-width 4 --write \"src/**/*.*\"",
         "precommit": "lint-staged",
         "prepare": "npm run build",
