@@ -14,7 +14,7 @@ describe('fireOnce', () => {
     
         element.click();
     
-        expect(callback.calls.count()).toBe(1);
+        expect(callback).toHaveBeenCalledTimes(1);
     });
     
     it('function should only fire once (with multiple elements)', () => {
@@ -29,7 +29,7 @@ describe('fireOnce', () => {
             el.click();
         }
     
-        expect(callback.calls.count()).toBe(1);
+        expect(callback).toHaveBeenCalledTimes(1);
     });
 });
 
