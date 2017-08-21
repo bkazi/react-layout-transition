@@ -1,7 +1,7 @@
 import {shallow} from 'enzyme';
 import * as React from 'react';
 
-import {childrenToMap} from '../../src/utils';
+import {childrenToMap, compareChildren} from '../../src/utils';
 
 describe('childrenToMap', () => {
     const child0Text = 'Hello World';
@@ -32,5 +32,12 @@ describe('childrenToMap', () => {
 
         expect(childMap).not.toBeNull();
         expect(childMap.size).toEqual(0);
+    });
+});
+
+describe('compareChildren', () => {
+    it('should return false if both maps are empty', () => {
+        const compare = compareChildren(new Map(), new Map());
+        expect(compare).toEqual(false);
     });
 });
