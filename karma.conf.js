@@ -6,6 +6,7 @@ module.exports = function(config) {
             { pattern: "tests/**/*.tsx" },
             { pattern: "src/**/*.ts" },
             { pattern: "src/**/*.tsx" },
+            { pattern: "node_modules/babel-polyfill/browser.js" }
         ],
         preprocessors: {
             "src/**/*.ts": ["karma-typescript", "coverage"],
