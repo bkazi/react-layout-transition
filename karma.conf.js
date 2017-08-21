@@ -23,6 +23,11 @@ module.exports = function(config) {
         karmaTypescriptConfig: {
             tsconfig: "./tsconfig.test.json",
             bundlerOptions: {
+                exclude: [
+                    "react/addons",
+                    'react/lib/ExecutionEnvironment',
+                    'react/lib/ReactContext',
+                ],
                 transforms: [
                     require("karma-typescript-es6-transform")({presets: ["env"]})
                 ]
