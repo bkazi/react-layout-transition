@@ -35,9 +35,26 @@ describe('childrenToMap', () => {
     });
 });
 
+// This test suite seems dodgy, needs more thought
 describe('compareChildren', () => {
     it('should return false if both maps are empty', () => {
         const compare = compareChildren(new Map(), new Map());
         expect(compare).toEqual(false);
+    });
+
+    it('should return true when children are the same', () => {
+        const MyComponent = () => (
+            <div>
+                <div>Hello World</div>
+                <div>Hello Again!</div>
+            </div>
+        );
+        const childrenWrapper = shallow(<MyComponent />).children();
+
+        const childMap = childrenToMap(childrenWrapper.getNodes());
+
+        const compare = compareChildren(childMap, childMap);
+
+        expect(compare).toEqual(true);
     });
 });
