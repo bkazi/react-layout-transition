@@ -5,10 +5,10 @@ import * as React from 'react';
 import {SharedElementTransitionGroup} from '../src';
 
 describe('SharedElementTransitionGroup', () => {
-    const Foo = (props) => (
+    const Foo = () => (
         <div>Foo</div>
     );
-    const Bar = (props) => (
+    const Bar = () => (
         <div>Bar</div>
     );
     class MyComponent extends React.Component {
