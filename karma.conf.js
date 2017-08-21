@@ -25,6 +25,7 @@ module.exports = function(config) {
             bundlerOptions: {
                 exclude: [
                     "react/addons",
+                    "react-addons-test-utils",
                     'react/lib/ExecutionEnvironment',
                     'react/lib/ReactContext',
                 ],
