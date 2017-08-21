@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import {childrenToMap} from '../../src/utils';
 
-describe('children', () => {
+describe('childrenToMap', () => {
     const child0Text = 'Hello World';
 
     it('should convert all children to a map correctly', () => {
