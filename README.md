@@ -4,7 +4,7 @@
 Trying to make layout transitions simple
 
 [![Build Status](https://travis-ci.org/bkazi/react-layout-transition.svg?branch=testing)](https://travis-ci.org/bkazi/react-layout-transition)
-[![Coverage Status](https://coveralls.io/repos/bkazi/react-layout-transition/badge.svg?branch=testing)](https://coveralls.io/r/bkazi/react-layout-transition?branch=testing)
+[![Coverage Status](https://coveralls.io/repos/github/bkazi/react-layout-transition/badge.svg?branch=testing)](https://coveralls.io/github/bkazi/react-layout-transition?branch=testing)
 
 Check it out at [https://react-layout-transition.surge.sh/](https://react-layout-transition.surge.sh)
 
