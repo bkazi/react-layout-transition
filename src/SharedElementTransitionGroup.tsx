@@ -21,7 +21,6 @@ export interface ISharedElementTransitionGroupProps {
 }
 
 export interface ISharedElementTransitionGroupState {
-    outgoingShow: boolean;
     incomingShow: boolean;
     children: Map<string, React.ReactElement<any>>;
     transitionPending: boolean;
@@ -43,7 +42,6 @@ class SharedElementTransitionGroup extends React.Component<
         this.state = {
             children: childrenToMap(props.children),
             incomingShow: false,
-            outgoingShow: true,
             transitionPending: false,
         };
     }
@@ -58,13 +56,14 @@ class SharedElementTransitionGroup extends React.Component<
             ...Array.from(prevChildren),
             ...Array.from(newChildren),
         ]);
+        const children: Map<string, React.ReactElement<any>> = new Map();
 
         allChildren.forEach((value, key) => {
-            const outgoing = prevChildren.has(key);
-            const incoming = newChildren.has(key);
+            const isOutgoing = prevChildren.has(key);
+            const isIncoming = newChildren.has(key);
 
-            if (outgoing) {
-                allChildren.set(
+            if (isOutgoing) {
+                children.set(
                     key,
                     React.cloneElement(value, {
                         innerRef: (ref: HTMLElement) => {
@@ -73,8 +72,8 @@ class SharedElementTransitionGroup extends React.Component<
                         outgoing: true,
                     }),
                 );
-            } else if (incoming) {
-                allChildren.set(
+            } else if (isIncoming) {
+                children.set(
                     key,
                     React.cloneElement(value, {
                         incoming: true,
@@ -88,7 +87,7 @@ class SharedElementTransitionGroup extends React.Component<
 
         this.setState(prevState => ({
             ...prevState,
-            children: allChildren,
+            children,
             transitionPending: true,
         }));
     }
@@ -104,6 +103,29 @@ class SharedElementTransitionGroup extends React.Component<
             return;
         }
         if (!this.incomingRef || !this.outgoingRef) {
+            const changedChildren = new Map();
+            for (const [key, value] of Array.from(
+                this.state.children.entries(),
+            )) {
+                let element;
+                if (value.props.incoming) {
+                    element = React.cloneElement(value, {
+                        incoming: undefined,
+                        ref: undefined,
+                    });
+                    changedChildren.set(key, element);
+                }
+            }
+            this.outgoingRef = undefined;
+            this.incomingRef = undefined;
+            this.outgoingSharedElements = [];
+            this.incomingSharedElements = [];
+            this.setState(state => ({
+                ...state,
+                children: changedChildren,
+                incomingShow: false,
+                transitionPending: false,
+            }));
             return;
         }
         if (!this.containerRef) {
@@ -126,7 +148,7 @@ class SharedElementTransitionGroup extends React.Component<
             this.incomingSharedElements,
             this.containerRef,
         );
-        const allChildren = this.state.children;
+        const children = this.state.children;
 
         const newElements = createDummyElements(
             outgoingSharedElements,
@@ -141,27 +163,25 @@ class SharedElementTransitionGroup extends React.Component<
                 events.forEach(event => {
                     (event.target as HTMLElement).remove();
                 });
-                for (const [key, value] of Array.from(allChildren.entries())) {
-                    const changedChildren = new Map();
-                    let element;
+                let changedChildren: Map<string, React.ReactElement<any>>;
+                for (const [key, value] of Array.from(children.entries())) {
                     if (value.props.incoming) {
-                        element = React.cloneElement(value, {
+                        const element = React.cloneElement(value, {
                             incoming: undefined,
                             ref: undefined,
                         });
-                        changedChildren.set(key, element);
+                        changedChildren = childrenToMap(element);
                     }
-                    this.outgoingRef = undefined;
-                    this.incomingRef = undefined;
-                    this.outgoingSharedElements = [];
-                    this.incomingSharedElements = [];
-                    this.setState(state => ({
-                        ...state,
-                        children: changedChildren,
-                        incomingShow: false,
-                        outgoingShow: false,
-                    }));
                 }
+                this.setState(state => ({
+                    ...state,
+                    children: changedChildren,
+                    incomingShow: false,
+                }));
+                this.outgoingRef = undefined;
+                this.incomingRef = undefined;
+                this.outgoingSharedElements = [];
+                this.incomingSharedElements = [];
             });
             this.setState(state => ({
                 ...state,
@@ -186,16 +206,11 @@ class SharedElementTransitionGroup extends React.Component<
                     .sx}, ${invert[idx].sy})`;
             });
         });
-
-        this.setState(state => ({
-            ...state,
-            outgoingShow: false,
-        }));
     }
 
     public render() {
         const outgoingStyles = {
-            opacity: this.state.outgoingShow ? 1 : 0,
+            opacity: 0,
             position: 'absolute',
             transition: 'opacity 300ms ease-out',
         };
