@@ -20,8 +20,9 @@ describe('childrenToMap', () => {
         expect(childMap.size).toEqual(2);
         expect(childMap.has(".0")).toEqual(true);
 
-        if (childMap.has(".0")) {
-            const child0Wrapper = shallow(childMap.get(".0"));
+        const child = childMap.get(".0")
+        if (child) {
+            const child0Wrapper = shallow(child);
             expect(child0Wrapper.text()).toEqual(child0Text);
         }
     });
