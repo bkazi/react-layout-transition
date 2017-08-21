@@ -6,7 +6,7 @@ import {childrenToMap} from '../../src/utils';
 describe('children', () => {
     const child0Text = 'Hello World';
 
-    it('test', () => {
+    it('should convert all children to a map correctly', () => {
         const MyComponent = () => (
             <div>
                 <div>{child0Text}</div>
