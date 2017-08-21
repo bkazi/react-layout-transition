@@ -5,12 +5,17 @@ import * as React from 'react';
 import {SharedElementTransitionGroup} from '../src';
 
 describe('SharedElementTransitionGroup', () => {
-    const Foo = () => (
-        <div>Foo</div>
-    );
-    const Bar = () => (
-        <div>Bar</div>
-    );
+    class Foo extends React.Component {
+        public render() {
+            return <div>Foo</div>;
+        }
+    };
+    class Bar extends React.Component {
+        public render() {
+            return <div>Bar</div>;
+        }
+    };
+
     class MyComponent extends React.Component {
         public state: {
             toggle: boolean,
