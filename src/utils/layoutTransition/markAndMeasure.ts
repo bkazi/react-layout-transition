@@ -4,14 +4,13 @@ function markAndMeasure(
 ) {
     const dimens: Map<string, any> = new Map();
     childNodes.forEach((child, index) => {
-        if (!(child instanceof HTMLElement)) {
-            return;
-        }
-        // mark initial elements with unique keys to track
-        const key = `.${index}`;
-        child.dataset.layoutKey = key;
+        if (child instanceof HTMLElement) {
+            // mark initial elements with unique keys to track
+            const key = `.${index}`;
+            child.dataset.layoutKey = key;
 
-        dimens.set(key, measureFn(child));
+            dimens.set(key, measureFn(child));
+        }
     });
     return dimens;
 }
