@@ -49,6 +49,8 @@ class SharedElementTransitionGroup extends React.Component<
     public componentWillReceiveProps(
         nextProps: ISharedElementTransitionGroupProps,
     ) {
+        this.outgoingSharedElements = [];
+        this.incomingSharedElements = [];
         const prevChildren = this.state.children;
         const newChildren = childrenToMap(nextProps.children);
 
@@ -103,29 +105,7 @@ class SharedElementTransitionGroup extends React.Component<
             return;
         }
         if (!this.incomingRef || !this.outgoingRef) {
-            const changedChildren = new Map();
-            for (const [key, value] of Array.from(
-                this.state.children.entries(),
-            )) {
-                let element;
-                if (value.props.incoming) {
-                    element = React.cloneElement(value, {
-                        incoming: undefined,
-                        ref: undefined,
-                    });
-                    changedChildren.set(key, element);
-                }
-            }
-            this.outgoingRef = undefined;
-            this.incomingRef = undefined;
-            this.outgoingSharedElements = [];
-            this.incomingSharedElements = [];
-            this.setState(state => ({
-                ...state,
-                children: changedChildren,
-                incomingShow: false,
-                transitionPending: false,
-            }));
+            this.setChildrenToIncoming();
             return;
         }
         if (!this.containerRef) {
@@ -138,6 +118,7 @@ class SharedElementTransitionGroup extends React.Component<
 
         const {outgoingSharedElements} = this.getSharedElements();
         if (!outgoingSharedElements.length) {
+            this.setChildrenToIncoming();
             return;
         }
         const initialDimensArr = getDimensArray(
@@ -163,25 +144,7 @@ class SharedElementTransitionGroup extends React.Component<
                 events.forEach(event => {
                     (event.target as HTMLElement).remove();
                 });
-                let changedChildren: Map<string, React.ReactElement<any>>;
-                for (const [key, value] of Array.from(children.entries())) {
-                    if (value.props.incoming) {
-                        const element = React.cloneElement(value, {
-                            incoming: undefined,
-                            ref: undefined,
-                        });
-                        changedChildren = childrenToMap(element);
-                    }
-                }
-                this.setState(state => ({
-                    ...state,
-                    children: changedChildren,
-                    incomingShow: false,
-                }));
-                this.outgoingRef = undefined;
-                this.incomingRef = undefined;
-                this.outgoingSharedElements = [];
-                this.incomingSharedElements = [];
+                this.setChildrenToIncoming(children);
             });
             this.setState(state => ({
                 ...state,
@@ -249,6 +212,31 @@ class SharedElementTransitionGroup extends React.Component<
             </div>
         );
     }
+
+    private setChildrenToIncoming = (
+        currentChildren?: Map<string, React.ReactElement<any>>,
+    ): void => {
+        const children = currentChildren
+            ? currentChildren
+            : this.state.children;
+        let changedChildren: Map<string, React.ReactElement<any>>;
+        for (const [key, value] of Array.from(children.entries())) {
+            let element;
+            if (value.props.incoming) {
+                element = React.cloneElement(value, {
+                    incoming: undefined,
+                    ref: undefined,
+                });
+                changedChildren = childrenToMap(element);
+            }
+        }
+        this.setState(state => ({
+            ...state,
+            children: changedChildren,
+            incomingShow: false,
+            transitionPending: false,
+        }));
+    };
 
     private getSharedElements = (): {
         outgoingSharedElements: HTMLElement[];
