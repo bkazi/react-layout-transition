@@ -3,6 +3,7 @@ import * as warning from 'warning';
 
 import {createInvertObject, fireOnce, getDimens} from './utils';
 import {getFlattenedChildren} from './utils/dom';
+import {ifMarkedThenMeasure, markAndMeasure} from './utils/layoutTransition';
 
 declare var process: {
     env: {
@@ -49,14 +50,7 @@ class LayoutTransitionGroup extends React.Component<
         // Traverse top layer for final positions
         const refs = this.state._lTransitionRefs;
         const childNodes = getFlattenedChildren(refs);
-        childNodes.forEach(child => {
-            if (child instanceof HTMLElement) {
-                const key = child.dataset.layoutKey;
-                if (key) {
-                    this.finalDimens.set(key, getDimens(child));
-                }
-            }
-        });
+        this.finalDimens = ifMarkedThenMeasure(childNodes, getDimens);
 
         // Fix existing nodes in same place
         childNodes.forEach((child, i) => {
@@ -179,16 +173,7 @@ class LayoutTransitionGroup extends React.Component<
         }
         // Traverse top layers for inital positions
         const childNodes = getFlattenedChildren(refs);
-        childNodes.forEach((child, index) => {
-            if (!(child instanceof HTMLElement)) {
-                return;
-            }
-            // mark initial elements with unique keys to track
-            const key = `.${index}`;
-            child.dataset.layoutKey = key;
-
-            this.initialDimens.set(key, getDimens(child));
-        });
+        this.initialDimens = markAndMeasure(childNodes, getDimens);
 
         // Update state
         this.setState(prevState => ({
