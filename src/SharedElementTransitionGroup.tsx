@@ -9,6 +9,7 @@ import {
     fireOnce,
     getDimensArray,
 } from './utils';
+import {getSharedElements} from './utils/dom';
 
 declare var process: {
     env: {
@@ -239,51 +240,19 @@ class SharedElementTransitionGroup extends React.Component<
     };
 
     private getSharedElements = (): {
-        outgoingSharedElements: HTMLElement[];
         incomingSharedElements: HTMLElement[];
+        outgoingSharedElements: HTMLElement[];
     } => {
         if (
-            this.outgoingSharedElements.length &&
-            this.incomingSharedElements.length
+            !this.incomingSharedElements.length ||
+            !this.outgoingSharedElements.length
         ) {
-            return {
-                incomingSharedElements: this.incomingSharedElements,
-                outgoingSharedElements: this.outgoingSharedElements,
-            };
-        }
-        if (!this.outgoingRef || !this.incomingRef) {
-            return {
-                incomingSharedElements: [],
-                outgoingSharedElements: [],
-            };
-        }
-
-        this.outgoingSharedElements = [];
-        this.incomingSharedElements = [];
-
-        const outgoingMarkedEls = Array.from(
-            this.outgoingRef.querySelectorAll('[id]'),
-        );
-        const incomingMarkedEls = Array.from(
-            this.incomingRef.querySelectorAll('[id]'),
-        );
-
-        const outgoingSet = new Set(
-            Array.from(outgoingMarkedEls).map(el => el.id),
-        );
-        const incomingSet = new Set(
-            Array.from(incomingMarkedEls).map(el => el.id),
-        );
-
-        for (const element of outgoingMarkedEls) {
-            if (incomingSet.has(element.id) && element instanceof HTMLElement) {
-                this.outgoingSharedElements.push(element);
-            }
-        }
-        for (const element of incomingMarkedEls) {
-            if (outgoingSet.has(element.id) && element instanceof HTMLElement) {
-                this.incomingSharedElements.push(element);
-            }
+            const {
+                container1SharedElements,
+                container2SharedElements,
+            } = getSharedElements(this.incomingRef, this.outgoingRef);
+            this.incomingSharedElements = container1SharedElements;
+            this.outgoingSharedElements = container2SharedElements;
         }
 
         if ('production' !== process.env.NODE_ENV) {
