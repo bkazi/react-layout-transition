@@ -2,18 +2,12 @@ import * as React from 'react';
 import * as warning from 'warning';
 
 import {createInvertObject, fireOnce, getDimens} from './utils';
+import {getFlattenedChildren} from './utils/dom';
 
 declare var process: {
     env: {
         NODE_ENV: string;
     };
-};
-
-const getFlattenedChildren = (refs: HTMLElement[]): Element[] => {
-    const childNodes = refs
-        .map(ref => Array.from(ref.children))
-        .reduce((acc, nodes) => acc.concat(nodes));
-    return childNodes;
 };
 
 export interface ILayoutTransitionGroupState {

@@ -1,3 +1,4 @@
+import getFlattenedChildren from './getFlattenedChildren';
 import getSharedElements from './getSharedElements';
 
-export {getSharedElements};
+export {getFlattenedChildren, getSharedElements};
