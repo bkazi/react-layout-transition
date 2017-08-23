@@ -4,6 +4,7 @@ import * as warning from 'warning';
 import {createInvertObject, fireOnce, getDimens} from './utils';
 import {getFlattenedChildren} from './utils/dom';
 import {
+    animateElementPosition,
     fixElementPosition,
     ifMarkedThenMeasure,
     markAndMeasure,
@@ -18,8 +19,8 @@ declare var process: {
 export interface ILayoutTransitionGroupState {
     _lTransitionPending: boolean;
     _lTransitionRefs?: HTMLElement[];
-    _lTransitionTiming?: number;
-    _lTransitionEasing?: string;
+    _lTransitionTiming: number;
+    _lTransitionEasing: string;
 }
 
 /**
@@ -36,10 +37,10 @@ class LayoutTransitionGroup extends React.Component<
         super();
 
         this.state = {
-            _lTransitionEasing: undefined,
+            _lTransitionEasing: 'ease-in-out',
             _lTransitionPending: false,
             _lTransitionRefs: undefined,
-            _lTransitionTiming: undefined,
+            _lTransitionTiming: 200,
         };
     }
 
@@ -65,39 +66,12 @@ class LayoutTransitionGroup extends React.Component<
         const easing = this.state._lTransitionEasing;
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                const initialNodes: HTMLElement[] = [];
-                const newNodes: HTMLElement[] = [];
-                childNodes.forEach((child, i) => {
-                    if (child instanceof HTMLElement) {
-                        const key = child.dataset.layoutKey;
-                        if (!key) {
-                            newNodes.push(child);
-                            return;
-                        }
-                        child.style.transition = `transform ${timing}ms ${easing}`;
-                        child.style.transform = '';
-                        initialNodes.push(child);
-                    }
-                });
-                fireOnce(initialNodes, 'transitionend', () => {
-                    initialNodes.forEach(child => {
-                        child.style.transition = '';
-                        child.removeAttribute('data-layout-key');
-                    });
-                    newNodes.forEach(child => {
-                        child.style.transition = 'opacity 200ms ease-in-out';
-                        child.style.opacity = '1';
-                        child.style.pointerEvents = '';
-                    });
-                });
+                animateElementPosition(childNodes, timing, easing);
             });
         });
 
         this.setState(state => ({
-            _lTransitionEasing: undefined,
             _lTransitionPending: false,
-            _lTransitionRefs: undefined,
-            _lTransitionTiming: undefined,
         }));
     }
 

@@ -1,4 +1,10 @@
+import animateElementPosition from './animateElementPosition';
 import fixElementPosition from './fixElementPosition';
 import {ifMarkedThenMeasure, markAndMeasure} from './markAndMeasure';
 
-export {ifMarkedThenMeasure, markAndMeasure, fixElementPosition};
+export {
+    animateElementPosition,
+    ifMarkedThenMeasure,
+    markAndMeasure,
+    fixElementPosition,
+};
