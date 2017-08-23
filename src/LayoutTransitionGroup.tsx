@@ -3,7 +3,11 @@ import * as warning from 'warning';
 
 import {createInvertObject, fireOnce, getDimens} from './utils';
 import {getFlattenedChildren} from './utils/dom';
-import {ifMarkedThenMeasure, markAndMeasure} from './utils/layoutTransition';
+import {
+    fixElementPosition,
+    ifMarkedThenMeasure,
+    markAndMeasure,
+} from './utils/layoutTransition';
 
 declare var process: {
     env: {
@@ -53,28 +57,7 @@ class LayoutTransitionGroup extends React.Component<
         this.finalDimens = ifMarkedThenMeasure(childNodes, getDimens);
 
         // Fix existing nodes in same place
-        childNodes.forEach((child, i) => {
-            if (child instanceof HTMLElement) {
-                const key = child.dataset.layoutKey;
-                if (!key) {
-                    child.style.opacity = '0';
-                    child.style.pointerEvents = 'none';
-                    return;
-                }
-                const initialDimen = this.initialDimens.get(key);
-                if (!initialDimen) {
-                    return;
-                }
-                const finalDimen = this.finalDimens.get(key);
-                if (!finalDimen) {
-                    return;
-                }
-                const invert = createInvertObject(finalDimen, initialDimen);
-                child.style.transition = '';
-                child.style.transform = `translate(${invert.x}px, ${invert.y}px) scale(${invert.sx}, ${invert.sy})`;
-                child.style.transformOrigin = '0 0';
-            }
-        });
+        fixElementPosition(childNodes, this.initialDimens, this.finalDimens);
 
         // Transition
         // Animate into new position
