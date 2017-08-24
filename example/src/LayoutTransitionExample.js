@@ -1,10 +1,12 @@
 import React from 'react';
 import {LayoutTransitionGroup} from '../../src/index';
+import SpringInterpolator from '../../src/interpolators/SpringInterpolator';
 
 class LayoutTransitionExample extends LayoutTransitionGroup {
     state = {
         config: 0,
     };
+    interpolator = new SpringInterpolator(180, 12, 0.1);
 
     config = (i) => {
         return () => {
@@ -13,6 +15,10 @@ class LayoutTransitionExample extends LayoutTransitionGroup {
             }), [this.barRef, this.listRef], 250, 'cubic-bezier(0.64, 0.13, 0.05, 1.67)');
         };
     };
+
+    getInterpolator = () => {
+        return this.interpolator;
+    }
 
     render() {
         const config = this.state.config;
