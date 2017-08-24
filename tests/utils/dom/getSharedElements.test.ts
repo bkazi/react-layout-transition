@@ -2,7 +2,7 @@ import {getSharedElements} from '../../../src/utils/dom';
 
 describe('getSharedElements', () => {
     it('should return empty arrays if containers are null', () => {
-        const {container1SharedElements, container2SharedElements} = getSharedElements(null, null);
+        const {container1SharedElements, container2SharedElements} = getSharedElements(undefined, undefined);
 
         expect(container1SharedElements.length).toEqual(0);
         expect(container2SharedElements.length).toEqual(0);
