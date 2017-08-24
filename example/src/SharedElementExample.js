@@ -1,14 +1,14 @@
 import React from 'react';
 
 import {SharedElementTransitionGroup} from '../../src/index';
-import DefaultInterpolator from '../../src/interpolators/DefaultInterpolator';
+import SpringInterpolator from '../../src/interpolators/SpringInterpolator';
 import Page1 from './Page1';
 import Page2 from './Page2';
 
 class SharedElementExample extends React.Component {
     constructor() {
         super();
-        this.interpolator = new DefaultInterpolator();
+        this.interpolator = new SpringInterpolator();
     }
 
     state = {
