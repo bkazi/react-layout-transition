@@ -25,7 +25,7 @@ function getDimens(element: HTMLElement, container?: HTMLElement): ClientRect {
 
 function getDimensArray(
     elements: HTMLElement[],
-    container: HTMLElement,
+    container?: HTMLElement,
 ): ClientRect[] {
     return elements.map(element => getDimens(element, container));
 }

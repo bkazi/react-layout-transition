@@ -2,6 +2,13 @@ import * as React from 'react';
 import * as warning from 'warning';
 
 import {createInvertObject, fireOnce, getDimens} from './utils';
+import {getFlattenedChildren} from './utils/dom';
+import {
+    animateElementPosition,
+    fixElementPosition,
+    ifMarkedThenMeasure,
+    markAndMeasure,
+} from './utils/layoutTransition';
 
 declare var process: {
     env: {
@@ -9,18 +16,11 @@ declare var process: {
     };
 };
 
-const getFlattenedChildren = (refs: HTMLElement[]): Element[] => {
-    const childNodes = refs
-        .map(ref => Array.from(ref.children))
-        .reduce((acc, nodes) => acc.concat(nodes));
-    return childNodes;
-};
-
 export interface ILayoutTransitionGroupState {
     _lTransitionPending: boolean;
     _lTransitionRefs?: HTMLElement[];
-    _lTransitionTiming?: number;
-    _lTransitionEasing?: string;
+    _lTransitionTiming: number;
+    _lTransitionEasing: string;
 }
 
 /**
@@ -37,10 +37,10 @@ class LayoutTransitionGroup extends React.Component<
         super();
 
         this.state = {
-            _lTransitionEasing: undefined,
+            _lTransitionEasing: 'ease-in-out',
             _lTransitionPending: false,
             _lTransitionRefs: undefined,
-            _lTransitionTiming: undefined,
+            _lTransitionTiming: 200,
         };
     }
 
@@ -55,38 +55,10 @@ class LayoutTransitionGroup extends React.Component<
         // Traverse top layer for final positions
         const refs = this.state._lTransitionRefs;
         const childNodes = getFlattenedChildren(refs);
-        childNodes.forEach(child => {
-            if (child instanceof HTMLElement) {
-                const key = child.dataset.layoutKey;
-                if (key) {
-                    this.finalDimens.set(key, getDimens(child));
-                }
-            }
-        });
+        this.finalDimens = ifMarkedThenMeasure(childNodes, getDimens);
 
         // Fix existing nodes in same place
-        childNodes.forEach((child, i) => {
-            if (child instanceof HTMLElement) {
-                const key = child.dataset.layoutKey;
-                if (!key) {
-                    child.style.opacity = '0';
-                    child.style.pointerEvents = 'none';
-                    return;
-                }
-                const initialDimen = this.initialDimens.get(key);
-                if (!initialDimen) {
-                    return;
-                }
-                const finalDimen = this.finalDimens.get(key);
-                if (!finalDimen) {
-                    return;
-                }
-                const invert = createInvertObject(finalDimen, initialDimen);
-                child.style.transition = '';
-                child.style.transform = `translate(${invert.x}px, ${invert.y}px) scale(${invert.sx}, ${invert.sy})`;
-                child.style.transformOrigin = '0 0';
-            }
-        });
+        fixElementPosition(childNodes, this.initialDimens, this.finalDimens);
 
         // Transition
         // Animate into new position
@@ -94,39 +66,12 @@ class LayoutTransitionGroup extends React.Component<
         const easing = this.state._lTransitionEasing;
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                const initialNodes: HTMLElement[] = [];
-                const newNodes: HTMLElement[] = [];
-                childNodes.forEach((child, i) => {
-                    if (child instanceof HTMLElement) {
-                        const key = child.dataset.layoutKey;
-                        if (!key) {
-                            newNodes.push(child);
-                            return;
-                        }
-                        child.style.transition = `transform ${timing}ms ${easing}`;
-                        child.style.transform = '';
-                        initialNodes.push(child);
-                    }
-                });
-                fireOnce(initialNodes, 'transitionend', () => {
-                    initialNodes.forEach(child => {
-                        child.style.transition = '';
-                        child.removeAttribute('data-layout-key');
-                    });
-                    newNodes.forEach(child => {
-                        child.style.transition = 'opacity 200ms ease-in-out';
-                        child.style.opacity = '1';
-                        child.style.pointerEvents = '';
-                    });
-                });
+                animateElementPosition(childNodes, timing, easing);
             });
         });
 
         this.setState(state => ({
-            _lTransitionEasing: undefined,
             _lTransitionPending: false,
-            _lTransitionRefs: undefined,
-            _lTransitionTiming: undefined,
         }));
     }
 
@@ -185,16 +130,7 @@ class LayoutTransitionGroup extends React.Component<
         }
         // Traverse top layers for inital positions
         const childNodes = getFlattenedChildren(refs);
-        childNodes.forEach((child, index) => {
-            if (!(child instanceof HTMLElement)) {
-                return;
-            }
-            // mark initial elements with unique keys to track
-            const key = `.${index}`;
-            child.dataset.layoutKey = key;
-
-            this.initialDimens.set(key, getDimens(child));
-        });
+        this.initialDimens = markAndMeasure(childNodes, getDimens);
 
         // Update state
         this.setState(prevState => ({
