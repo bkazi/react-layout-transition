@@ -2,7 +2,7 @@ import Interpolator from './Interpolator';
 
 import {fireOnce} from '../utils';
 
-export default class DefaultInterpolator extends Interpolator {
+export default class CssInterpolator extends Interpolator {
     private transition: string = 'transform 300ms ease-in-out';
 
     constructor() {
@@ -15,8 +15,23 @@ export default class DefaultInterpolator extends Interpolator {
         reverse: boolean = false,
         callback?: () => void,
     ) {
+        if (callback) {
+            element.addEventListener('transitionend', () => {
+                element.style.transition = '';
+                callback();
+            });
+        }
         element.style.transformOrigin = '0 0';
-        element.style.transition = this.transition;
+        if (reverse) {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    element.style.transition = this.transition;
+                    element.style.transform = '';
+                });
+            });
+        } else {
+            element.style.transition = this.transition;
+        }
         element.style.transform = `translate(${invertObject.x}px, ${invertObject.y}px) scale(${invertObject.sx}, ${invertObject.sy})`;
     }
 
@@ -27,14 +42,28 @@ export default class DefaultInterpolator extends Interpolator {
         callback?: () => void,
     ) {
         if (callback) {
-            fireOnce(elements, 'transitionend', callback);
+            fireOnce(elements, 'transitionend', () => {
+                elements.forEach(el => {
+                    el.style.transition = '';
+                });
+                callback();
+            });
         }
         elements.forEach((element, idx) => {
             element.style.transformOrigin = '0 0';
-            element.style.transition = this.transition;
             element.style.transform = `translate(${invertObject[idx]
                 .x}px, ${invertObject[idx].y}px) scale(${invertObject[idx]
                 .sx}, ${invertObject[idx].sy})`;
+            if (reverse) {
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        element.style.transition = this.transition;
+                        element.style.transform = '';
+                    });
+                });
+            } else {
+                element.style.transition = this.transition;
+            }
         });
     }
 }
