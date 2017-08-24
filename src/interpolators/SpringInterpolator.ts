@@ -54,23 +54,49 @@ export default class SpringInterpolator extends Interpolator {
         > = new Map();
         elements.forEach((el, idx) => {
             el.style.transformOrigin = '0 0';
-            map.set(el, {
-                invert: invertObject[idx],
-                state: {
-                    sx: {
-                        isAnimating: !(invertObject[idx].sx === 1),
-                        v: 0,
-                        x: 1,
+            const invert = invertObject[idx];
+            if (reverse) {
+                map.set(el, {
+                    invert: {
+                        sx: 1,
+                        sy: 1,
+                        x: 0,
+                        y: 0,
                     },
-                    sy: {
-                        isAnimating: !(invertObject[idx].sy === 1),
-                        v: 0,
-                        x: 1,
+                    state: {
+                        sx: {
+                            isAnimating: !(invert.sx === 1),
+                            v: 0,
+                            x: invert.sx,
+                        },
+                        sy: {
+                            isAnimating: !(invert.sy === 1),
+                            v: 0,
+                            x: invert.sy,
+                        },
+                        x: {isAnimating: !(invert.x === 0), v: 0, x: invert.x},
+                        y: {isAnimating: !(invert.y === 0), v: 0, x: invert.y},
                     },
-                    x: {x: 0, v: 0, isAnimating: !(invertObject[idx].x === 0)},
-                    y: {x: 0, v: 0, isAnimating: !(invertObject[idx].y === 0)},
-                },
-            });
+                });
+            } else {
+                map.set(el, {
+                    invert,
+                    state: {
+                        sx: {
+                            isAnimating: !(invert.sx === 1),
+                            v: 0,
+                            x: 1,
+                        },
+                        sy: {
+                            isAnimating: !(invert.sy === 1),
+                            v: 0,
+                            x: 1,
+                        },
+                        x: {x: 0, v: 0, isAnimating: !(invert.x === 0)},
+                        y: {x: 0, v: 0, isAnimating: !(invert.y === 0)},
+                    },
+                });
+            }
         });
         let animComplete = false;
         const update = () => {
@@ -138,17 +164,23 @@ export default class SpringInterpolator extends Interpolator {
                             state: currState,
                         });
                     } else {
+                        element.style.transform = '';
+                        element.style.transformOrigin = '';
                         map.delete(element);
                     }
                 }
             });
             animComplete = map.size === 0;
         };
-        requestAnimationFrame(() => {
+        if (reverse) {
+            update();
+        } else {
             requestAnimationFrame(() => {
-                update();
+                requestAnimationFrame(() => {
+                    update();
+                });
             });
-        });
+        }
     }
 
     // Credit to react-motion by chenglou
@@ -161,7 +193,7 @@ export default class SpringInterpolator extends Interpolator {
         if (currX === finalX) {
             return {x: finalX, v: 0};
         }
-        const seconds = 1000 / 60 / 1000;
+        const seconds = 0.0166;
         const Fspring = -this.stiffness * (currX - finalX);
         const Fdamping = -this.damping * currV;
 
