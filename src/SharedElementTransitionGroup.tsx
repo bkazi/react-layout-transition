@@ -153,7 +153,7 @@ class SharedElementTransitionGroup extends React.Component<
             finalDimensArr,
         );
         this.outgoingRef.addEventListener('transitionend', () => {
-            this.interpolator.playMultiple(newElements, invert, () => {
+            this.interpolator.playMultiple(newElements, invert, false, () => {
                 if (!this.incomingRef) {
                     return;
                 }

@@ -12,6 +12,7 @@ export default class DefaultInterpolator extends Interpolator {
     public play(
         element: HTMLElement,
         invertObject: {sx: number; sy: number; x: number; y: number},
+        reverse: boolean = false,
         callback?: () => void,
     ) {
         element.style.transformOrigin = '0 0';
@@ -22,6 +23,7 @@ export default class DefaultInterpolator extends Interpolator {
     public playMultiple(
         elements: HTMLElement[],
         invertObject: Array<{sx: number; sy: number; x: number; y: number}>,
+        reverse: boolean = false,
         callback?: () => void,
     ) {
         if (callback) {
