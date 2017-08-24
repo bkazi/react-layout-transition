@@ -56,14 +56,14 @@ export default class SpringInterpolator extends Interpolator {
                 invert: invertObject[idx],
                 state: {
                     sx: {
-                        x: 1,
-                        v: 0,
                         isAnimating: !(invertObject[idx].sx === 1),
+                        v: 0,
+                        x: 1,
                     },
                     sy: {
-                        x: 1,
-                        v: 0,
                         isAnimating: !(invertObject[idx].sy === 1),
+                        v: 0,
+                        x: 1,
                     },
                     x: {x: 0, v: 0, isAnimating: !(invertObject[idx].x === 0)},
                     y: {x: 0, v: 0, isAnimating: !(invertObject[idx].y === 0)},
