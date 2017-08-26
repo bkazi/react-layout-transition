@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as warning from 'warning';
 
+import Interpolator from './interpolators/Interpolator';
 import {
     childrenToMap,
     compareChildren,
@@ -19,6 +20,7 @@ declare var process: {
 
 export interface ISharedElementTransitionGroupProps {
     children?: any;
+    interpolator: Interpolator;
 }
 
 export interface ISharedElementTransitionGroupState {
@@ -36,9 +38,12 @@ class SharedElementTransitionGroup extends React.Component<
     private incomingSharedElements: HTMLElement[] = [];
     private incomingRef?: HTMLElement;
     private containerRef: HTMLDivElement | null;
+    private interpolator: Interpolator;
 
     constructor(props: ISharedElementTransitionGroupProps) {
         super();
+
+        this.interpolator = props.interpolator;
 
         this.state = {
             children: childrenToMap(props.children),
@@ -97,7 +102,7 @@ class SharedElementTransitionGroup extends React.Component<
 
     public componentDidUpdate(
         prevProps: ISharedElementTransitionGroupProps,
-        prevState: ISharedElementTransitionGroupProps,
+        prevState: ISharedElementTransitionGroupState,
     ) {
         if (!this.state.transitionPending) {
             return;
@@ -136,22 +141,6 @@ class SharedElementTransitionGroup extends React.Component<
             outgoingSharedElements,
             initialDimensArr,
         );
-        fireOnce(newElements, 'transitionend', (events: TransitionEvent[]) => {
-            if (!this.incomingRef) {
-                return;
-            }
-
-            this.incomingRef.addEventListener('transitionend', () => {
-                events.forEach(event => {
-                    (event.target as HTMLElement).remove();
-                });
-                this.setChildrenToIncoming(children);
-            });
-            this.setState(state => ({
-                ...state,
-                incomingShow: true,
-            }));
-        });
 
         newElements.forEach((element, idx) => {
             if (this.containerRef) {
@@ -164,10 +153,21 @@ class SharedElementTransitionGroup extends React.Component<
             finalDimensArr,
         );
         this.outgoingRef.addEventListener('transitionend', () => {
-            newElements.forEach((element, idx) => {
-                element.style.transform = `translate(${invert[idx]
-                    .x}px, ${invert[idx].y}px) scale(${invert[idx]
-                    .sx}, ${invert[idx].sy})`;
+            this.interpolator.playMultiple(newElements, invert, false, () => {
+                if (!this.incomingRef) {
+                    return;
+                }
+
+                this.incomingRef.addEventListener('transitionend', () => {
+                    newElements.forEach(el => {
+                        el.remove();
+                    });
+                    this.setChildrenToIncoming(children);
+                });
+                this.setState(state => ({
+                    ...state,
+                    incomingShow: true,
+                }));
             });
         });
     }

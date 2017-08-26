@@ -3,8 +3,8 @@
 ![Logo](assets/logo.png)
 Trying to make layout transitions simple
 
-[![Build Status](https://travis-ci.org/bkazi/react-layout-transition.svg?branch=master)](https://travis-ci.org/bkazi/react-layout-transition)
-[![Coverage Status](https://coveralls.io/repos/github/bkazi/react-layout-transition/badge.svg?branch=master)](https://coveralls.io/github/bkazi/react-layout-transition?branch=master)
+[![Build Status](https://travis-ci.org/bkazi/react-layout-transition.svg?branch=interpolator)](https://travis-ci.org/bkazi/react-layout-transition)
+[![Coverage Status](https://coveralls.io/repos/github/bkazi/react-layout-transition/badge.svg?branch=interpolator)](https://coveralls.io/github/bkazi/react-layout-transition?branch=interpolator)
 
 Check it out at [https://react-layout-transition.surge.sh/](https://react-layout-transition.surge.sh)
 

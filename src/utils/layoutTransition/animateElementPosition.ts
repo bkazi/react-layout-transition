@@ -1,27 +1,41 @@
-import {fireOnce} from '../';
+import {createInvertObject} from '../';
+import Interpolator from '../../interpolators/Interpolator';
 
 export default function animateElementPosition(
     childNodes: Element[],
-    timing: number,
-    easing: string,
+    initialDimens: Map<string, ClientRect>,
+    finalDimens: Map<string, ClientRect>,
+    interpolator: Interpolator,
 ) {
     const initialNodes: HTMLElement[] = [];
+    const invertObjectArray: Array<{
+        sx: number;
+        sy: number;
+        x: number;
+        y: number;
+    }> = [];
     const newNodes: HTMLElement[] = [];
-    childNodes.forEach((child, i) => {
+    childNodes.forEach(child => {
         if (child instanceof HTMLElement) {
             const key = child.dataset.layoutKey;
             if (!key) {
+                child.style.opacity = '0';
+                child.style.pointerEvents = 'none';
                 newNodes.push(child);
                 return;
             }
-            child.style.transition = `transform ${timing}ms ${easing}`;
-            child.style.transform = '';
-            initialNodes.push(child);
+            const initialDimen = initialDimens.get(key);
+            const finalDimen = finalDimens.get(key);
+            if (initialDimen && finalDimen) {
+                invertObjectArray.push(
+                    createInvertObject(finalDimen, initialDimen),
+                );
+                initialNodes.push(child);
+            }
         }
     });
-    fireOnce(initialNodes, 'transitionend', () => {
+    interpolator.playMultiple(initialNodes, invertObjectArray, true, () => {
         initialNodes.forEach(child => {
-            child.style.transition = '';
             child.removeAttribute('data-layout-key');
         });
         newNodes.forEach(child => {

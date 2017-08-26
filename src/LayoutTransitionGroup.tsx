@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as warning from 'warning';
 
+import Interpolator from './interpolators/Interpolator';
 import {createInvertObject, fireOnce, getDimens} from './utils';
 import {getFlattenedChildren} from './utils/dom';
 import {
     animateElementPosition,
-    fixElementPosition,
     ifMarkedThenMeasure,
     markAndMeasure,
 } from './utils/layoutTransition';
@@ -26,7 +26,7 @@ export interface ILayoutTransitionGroupState {
 /**
  * Class for the base component used to manage layout transitions
  */
-class LayoutTransitionGroup extends React.Component<
+abstract class LayoutTransitionGroup extends React.Component<
     {},
     ILayoutTransitionGroupState
 > {
@@ -57,18 +57,12 @@ class LayoutTransitionGroup extends React.Component<
         const childNodes = getFlattenedChildren(refs);
         this.finalDimens = ifMarkedThenMeasure(childNodes, getDimens);
 
-        // Fix existing nodes in same place
-        fixElementPosition(childNodes, this.initialDimens, this.finalDimens);
-
-        // Transition
-        // Animate into new position
-        const timing = this.state._lTransitionTiming;
-        const easing = this.state._lTransitionEasing;
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                animateElementPosition(childNodes, timing, easing);
-            });
-        });
+        animateElementPosition(
+            childNodes,
+            this.initialDimens,
+            this.finalDimens,
+            this.getInterpolator(),
+        );
 
         this.setState(state => ({
             _lTransitionPending: false,
@@ -141,6 +135,8 @@ class LayoutTransitionGroup extends React.Component<
             _lTransitionTiming: timing,
         }));
     };
+
+    protected abstract getInterpolator(): Interpolator;
 }
 
 export default LayoutTransitionGroup;

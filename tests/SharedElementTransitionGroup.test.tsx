@@ -3,6 +3,7 @@ import jasmineEnzyme from 'jasmine-enzyme';
 import * as React from 'react';
 
 import {SharedElementTransitionGroup} from '../src';
+import CssInterpolator from '../src/interpolators/CssInterpolator';
 
 describe('SharedElementTransitionGroup (no refs, no shared elements marked)', () => {
     class Foo extends React.Component {
@@ -17,20 +18,14 @@ describe('SharedElementTransitionGroup (no refs, no shared elements marked)', ()
     };
 
     class MyComponent extends React.Component {
-        public state: {
-            toggle: boolean,
+        public state = {
+            toggle: true,
         };
-        constructor() {
-            super();
-
-            this.state = {
-                toggle: true,
-            };
-        }
+        private interpolator = new CssInterpolator();
 
         public render() {
             return (
-                <SharedElementTransitionGroup>
+                <SharedElementTransitionGroup interpolator={this.interpolator}>
                     {this.state.toggle && <Foo />}
                     {!this.state.toggle && <Bar />}
                 </SharedElementTransitionGroup>
@@ -73,20 +68,14 @@ describe('SharedElementTransitionGroup (with refs, no shared elements marked)', 
     };
 
     class MyComponent extends React.Component {
-        public state: {
-            toggle: boolean,
+        public state = {
+            toggle: true,
         };
-        constructor() {
-            super();
-
-            this.state = {
-                toggle: true,
-            };
-        }
+        private interpolator = new CssInterpolator();
 
         public render() {
             return (
-                <SharedElementTransitionGroup>
+                <SharedElementTransitionGroup interpolator={this.interpolator}>
                     {this.state.toggle && <Foo />}
                     {!this.state.toggle && <Bar />}
                 </SharedElementTransitionGroup>
@@ -137,20 +126,14 @@ describe('SharedElementTransitionGroup (with refs and shared elements marked)', 
     };
 
     class MyComponent extends React.Component {
-        public state: {
-            toggle: boolean,
+        public state = {
+            toggle: true,
         };
-        constructor() {
-            super();
-
-            this.state = {
-                toggle: true,
-            };
-        }
+        private interpolator = new CssInterpolator();
 
         public render() {
             return (
-                <SharedElementTransitionGroup>
+                <SharedElementTransitionGroup interpolator={this.interpolator}>
                     {this.state.toggle && <Foo />}
                     {!this.state.toggle && <Bar />}
                 </SharedElementTransitionGroup>
