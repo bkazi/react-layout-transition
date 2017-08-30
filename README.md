@@ -64,7 +64,7 @@ class MyComponent extends LayoutTransitionGroup {
 }
 ```
 
-### `this.beginTransition`
+#### `this.beginTransition`
 ✨ _this is where the magic happens_ ✨
 
 **parameters**
@@ -80,59 +80,49 @@ It classifies elements as shared if you mark them with the same id in both the i
 
 ![SharedElementDemo](assets/demoGifs/sharedElementDemo.gif)
 
+Find the code for above example here [here](example/src/SharedElementExample.js)
+
+### Usage
+
 ```jsx
 class Demo extends React.Component {
-    state = {
-        switch: true,
-    };
+    interpolator = new CssInterpolator();
 
-    toggle = () => {
-        this.setState((prevState) => ({
-            switch: !prevState.switch,
-        }));
+    state = {
+        toggle: true,
     };
 
     render() {
         return (
             <div>
-                <button onClick={this.toggle}>Click Me</button>
-                <SharedElementTransitionGroup>
-                    {this.state.switch && <Page1 />}
-                    {!this.state.switch && <Page2 />}
+                // animates when toggle is changed to false
+                <SharedElementTransitionGroup interpolator={this.interpolator}>
+                    {this.state.toggle && <Page1 />}
+                    {!this.state.toggle && <Page2 />}
                 </SharedElementTransitionGroup>
             </div>
         );
     }
 }
+```
 
+#### props
+
+- `interpolator`: Interpolator <br />
+    Pass an instance of the interpolator you would like to use for the animation
+
+**Make sure you mark the shared elements with the same `id`s**
+
+```jsx
 class Page1 extends React.Component {
     render() {
-        const cont = {
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            overflow: 'hidden',
-        };
-
-        const img1Style = {
-            maxWidth: '100%',
-            height: 'auto',
-        };
-
-        const img2Style = {
-            maxWidth: '100%',
-            height: 'auto',
-        };
-
         return (
             <div style={this.props.style} ref={this.props.innerRef}>
                 <p>...</p>
-                <div style={cont}>
+                <div className='vertical-flex'>
                     // this is where the magic happens ✨
-                    <img id="hero" style={img1Style} src='https://68.media.tumblr.com/4d1f173744a32bb4b35a2d5d0babff74/tumblr_mnh29fxz111st5lhmo1_1280.jpg' />
-                    <img id="another-one" style={img2Style} src='https://images.unsplash.com/13/unsplash_5239d6c04342c_1.JPG' />
+                    <img id="hero" className='img-style' src='image1.jpg' />
+                    <img id="another-one" className='img-style' src='image2.jpg' />
                 </div>
                 <p>...</p>
             </div>
@@ -142,25 +132,17 @@ class Page1 extends React.Component {
 
 class Page2 extends React.Component {
     render() {
-        const imgStyle = {
-            width: '100%',
-            height: 'auto',
-        };
-
         return (
             <div style={this.props.style} ref={this.props.innerRef}>
                 // this is where the magic happens ✨
-                <img id="hero" style={imgStyle} src='https://68.media.tumblr.com/4d1f173744a32bb4b35a2d5d0babff74/tumblr_mnh29fxz111st5lhmo1_1280.jpg' />
+                <img id="hero" className='img-style' src='image1.jpg' />
                 <p>...</p>
-                <img id="another-one" style={imgStyle} src='https://images.unsplash.com/13/unsplash_5239d6c04342c_1.JPG' />
+                <img id="another-one" className='img-style' src='image2.jpg' />
             </div>
         );
     }
 }
-
 ```
-
-You can find the code for the above demos in the example directory
 
 Please do report any bugs you encounter and point to me any examples and use cases that could be used to improve this
 
