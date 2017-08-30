@@ -19,8 +19,6 @@ declare var process: {
 export interface ILayoutTransitionGroupState {
     _lTransitionPending: boolean;
     _lTransitionRefs?: HTMLElement[];
-    _lTransitionTiming: number;
-    _lTransitionEasing: string;
 }
 
 /**
@@ -37,10 +35,8 @@ abstract class LayoutTransitionGroup extends React.Component<
         super();
 
         this.state = {
-            _lTransitionEasing: 'ease-in-out',
             _lTransitionPending: false,
             _lTransitionRefs: undefined,
-            _lTransitionTiming: 200,
         };
     }
 
@@ -78,8 +74,6 @@ abstract class LayoutTransitionGroup extends React.Component<
     protected beginTransition = (
         stateUpdateFn: ({}) => {},
         refs: HTMLElement[] | HTMLElement,
-        timing = 200,
-        easing = 'ease-in-out',
     ) => {
         if ('production' !== process.env.NODE_ENV) {
             const param1 =
@@ -87,9 +81,7 @@ abstract class LayoutTransitionGroup extends React.Component<
             const param2 =
                 !!refs &&
                 (refs instanceof Array || refs instanceof HTMLElement);
-            const param3 = !timing || (!!timing && typeof timing === 'number');
-            const param4 = !easing || (!!easing && typeof easing === 'string');
-            const all = param1 && param2 && param3 && param4;
+            const all = param1 && param2;
             if (!all) {
                 warning(
                     all,
@@ -104,14 +96,6 @@ abstract class LayoutTransitionGroup extends React.Component<
                     refs &&
                         (refs instanceof Array || refs instanceof HTMLElement),
                     'Second parameter of beginTransition must be an array of HTML refs or a single HTML ref',
-                );
-                warning(
-                    !timing || (timing && typeof timing === 'number'),
-                    'If third parameter of beginTransition is defined it must be a number',
-                );
-                warning(
-                    !easing || (easing && typeof easing === 'string'),
-                    'If fourth parameter of beginTransition is defined then it must be a string',
                 );
             }
         }
@@ -129,10 +113,8 @@ abstract class LayoutTransitionGroup extends React.Component<
         // Update state
         this.setState(prevState => ({
             ...stateUpdateFn(prevState),
-            _lTransitionEasing: easing,
             _lTransitionPending: true,
             _lTransitionRefs: refs,
-            _lTransitionTiming: timing,
         }));
     };
 
