@@ -44,7 +44,7 @@ Find the code for above example here [here](example/src/LayoutTransitionExample.
 
 ### Usage
 An abstract class that must be extended by your component
-Must also implement the `getInterpolator` function that returns an Interpolator.
+Must also implement the `getInterpolator` function that returns an Interpolator. (see section below)
 
 ```jsx
 class MyComponent extends LayoutTransitionGroup {
@@ -109,7 +109,7 @@ class Demo extends React.Component {
 #### props
 
 - `interpolator`: Interpolator <br />
-    Pass an instance of the interpolator you would like to use for the animation
+    Pass an instance of the interpolator you would like to use for the animation. (see section below)
 
 **Make sure you mark the shared elements with the same `id`s**
 
@@ -143,6 +143,77 @@ class Page2 extends React.Component {
     }
 }
 ```
+
+## Interpolators
+Interpolators are classes that implement certain methods that are called to perform the animation. This allows seperation of animation logic from the rest of the code and also enables different kinds of animations and techniques.
+
+There are 2 kinds of interpolators in the `interpolators` directory.
+
+### `CssInterpolator`
+
+```js
+import CssInterpolator from 'react-layout-transition/interpolators/CssInterpolator';
+
+const interpolator = new CssInterpolator(timing, easing);
+```
+Uses CSS transforms to animate elements.
+
+The constructor takes two _optional_ parameters
+- `timing`: number <br/>
+    the number **milliseconds** the transition takes<br/>
+    **default:** 300
+- `easing`: string <br/>
+    the easing function for the transition<br/>
+    **default:** 'ease-in-out'
+
+### `SpringInterpolator`
+
+```js
+import SpringInterpolator from 'react-layout-transition/interpolators/SpringInterpolator';
+
+const interpolator = new SpringInterpolator(stiffness, damping, precision);
+```
+Uses CSS transforms to animate elements.
+
+The constructor takes three _optional_ parameters
+- `stiffness`: number <br/>
+    the number **milliseconds** the transition takes<br/>
+    **default:** 170
+- `damping`: number <br/>
+    the easing function for the transition<br/>
+    **default:** 26
+- `precision`: number <br/>
+    the easing function for the transition<br/>
+    **default:** 0.01
+
+### Custom Interpolators
+You can write your own interpolators as long as you implement the correct functions
+
+```js
+import Interpolator from 'react-layout-transition/interpolators/Interpolator';
+
+class MyInterpolator extends Interpolator {
+    play(
+        element: HTMLElement,
+        invertObject: {sx: number; sy: number; x: number; y: number},
+        reverse: boolean,
+        callback?: () => void,
+    ): void;
+
+    playMultiple(
+        element: HTMLElement[],
+        invertObject: Array<{sx: number; sy: number; x: number; y: number}>,
+        reverse: boolean,
+        callback?: () => void,
+    ): void;
+}
+```
+
+The `invertObject` is an object that contains the delta of initial and final values of
+- scale in X-axis (sx)
+- scale in Y-axis (sy)
+- translation in X-axis (x)
+- translation in Y-axis (y)
 
 Please do report any bugs you encounter and point to me any examples and use cases that could be used to improve this
 
