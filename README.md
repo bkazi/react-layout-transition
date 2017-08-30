@@ -8,7 +8,7 @@ Trying to make layout transitions simple
 
 Check it out at [https://react-layout-transition.surge.sh/](https://react-layout-transition.surge.sh)
 
-This project aims to provide React components that can :sparkles:_automagically_:sparkles: animate between changes in your layout.
+This project aims to provide React components that can :sparkles: _automagically_ :sparkles: animate between changes in your layout.
 Inspired by existing solutions on native platforms, it hopes to bring similar functionality and ease to the web.
 
 These are some great pieces with example code on how to use the native platform feature
@@ -24,8 +24,10 @@ react-layout-transition is available on the npm registry and can be installed vi
 ```bash
 npm install --save react-layout-transition
 ```
+You should have npm installed if you have Node.js<br />
+Or you can download Node.js from https://nodejs.org/en/ which comes with npm
 
-You can also include it directly in the browser via the [unpkg CDN](https://unpkg.com)
+You can also include it directly using script tags via the [unpkg CDN](https://unpkg.com)
 
 ```html
 <script src='https://unpkg.com/react-layout-transition/dist/react-layout-transition.min.js'></script>
@@ -38,108 +40,38 @@ Can handle the addition and removal of DOM nodes (as shown below)
 
 ![LayoutTransitionDemo](assets/demoGifs/layoutTransitionDemo.gif)
 
+Find the code for above example here [here](example/src/LayoutTransitionExample.js)
+
+### Usage
+An abstract class that must be extended by your component
+Must also implement the `getInterpolator` function that returns an Interpolator.
+
 ```jsx
-class Demo extends LayoutTransitionGroup {
-	state = {
-		config: 0,
-	};
+class MyComponent extends LayoutTransitionGroup {
+    this.interpolator = new CssInterpolator();
 
-	config = (i) => {
-		return () => {
-			// this is where the magic happens ✨
-			this.beginTransition((prevState) => ({
-					config: i,
-			}), [this.barRef, this.listRef], 250, 'cubic-bezier(0.64, 0.13, 0.05, 1.67)');
-		};
-	};
+    getInterpolator() {
+        return this.interpolator;
+    }
 
-	render() {
-		const config = this.state.config;
-		const config1 = config === 0;
-		const config2 = config === 1;
-		const count = config1 ? 5 : config2 ? 6 : 7;
+	// must call superclass method if you implement componentDidUpdate
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
+        // your code here
+    }
 
-		const gridStyle = {
-			height: '240px',
-			width: '100%',
-			maxWidth: '300px',
-			margin: '0 auto',
-			display: 'flex',
-			flexDirection: 'row',
-			flexWrap: 'wrap',
-			justifyContent: 'center',
-			flexGrow: '3',
-		};
-
-		const horizontalStyle = {
-			width: '100%',
-			height: '80px',
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'center',
-			alignItems: 'center',
-		};
-
-		const barStyle = {
-			height: '80px',
-		};
-
-		const childStyle = {
-			width: '48px',
-			height: '48px',
-			borderRadius: '50%',
-			backgroundColor: 'rgb(230, 150, 0)',
-			margin: '16px',
-		};
-
-		const buttonHolder = {
-			backgroundColor: 'rgb(150, 200, 230)',
-			height: '64px',
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'center',
-			alignItems: 'center',
-		};
-
-		const buttonStyle = {
-			height: '48px',
-			flexGrow: '1',
-			margin: '8px',
-			backgroundColor: 'white',
-			border: '0',
-		};
-		
-		return (
-			<div>
-				<div style={buttonHolder}>
-					<button style={buttonStyle} onClick={this.config(0)}>0</button>
-					<button style={buttonStyle} onClick={this.config(1)}>1</button>
-					<button style={buttonStyle} onClick={this.config(2)}>2</button>
-				</div>
-				<div
-					style={horizontalStyle}
-					ref={(ref) => {
-							this.barRef = ref;
-					}}
-				>
-					<div style={{...barStyle, flexGrow: 1, backgroundColor: 'rgb(200, 0, 0)'}}></div>
-					<div style={{...barStyle, flexGrow: config1 ? 1 : config2 ? 5 : 1, backgroundColor: 'rgb(0, 200, 0)'}}></div>
-					<div style={{...barStyle, flexGrow: config1 ? 1 : config2 ? 5 : 10, backgroundColor: 'rgb(0, 0, 200)'}}></div>
-				</div>
-				<div
-					style={gridStyle}
-					ref={(ref) => {
-							this.listRef = ref;
-					}}
-				>
-					{[...Array(count).keys()].map((i) => <div style={childStyle} key={i}></div>)}
-				</div>
-			</div>
-		);
-	}
+    // other methods and React lifecycle methods
 }
 ```
 
+### `this.beginTransition`
+✨ _this is where the magic happens_ ✨
+
+**parameters**
+- `stateUpdateFn`: (currState) => newState <br/>
+    A function that takes in the the current state and returns the new state. Identical to the first parameter of React's `setState` 
+- `refs`: Ref[] | Ref <br/>
+    The React ref to the HTML element whose top level children will be animated
 
 ## SharedElementTransitionGroup
 
