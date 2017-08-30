@@ -3,10 +3,11 @@ import Interpolator from './Interpolator';
 import {fireOnce} from '../utils';
 
 export default class CssInterpolator extends Interpolator {
-    private transition: string = 'transform 300ms ease-in-out';
+    private transition: string;
 
-    constructor() {
+    constructor(timing = 300, easing = 'ease-in-out') {
         super();
+        this.transition = `transform ${timing}ms ${easing}`;
     }
 
     public play(
