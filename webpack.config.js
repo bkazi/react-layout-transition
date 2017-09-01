@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const BabiliPlugin = require('babili-webpack-plugin');
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 
 const isProd = process.env.NODE_ENV === 'PRODUCTION';
 
@@ -38,7 +38,7 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
-        new BabiliPlugin({}, {
+        new MinifyPlugin({}, {
             removeComments: true,
         }),
     ] : [],
