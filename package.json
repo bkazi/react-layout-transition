@@ -15,7 +15,9 @@
         "precommit": "lint-staged",
         "prepare": "npm run build",
         "build": "run-p build:*",
-        "build:dist": "webpack --config webpack.config.js && NODE_ENV=\"PRODUCTION\" webpack --config webpack.config.js",
+        "build:dist": "run-p build:dist:rlt build:dist:inter",
+        "build:dist:rlt": "webpack --config webpack.config.js && NODE_ENV=\"PRODUCTION\" webpack --config webpack.config.js",
+        "build:dist:inter": "webpack --config webpack.interpolator.config.js && NODE_ENV=\"PRODUCTION\" webpack --config webpack.interpolator.config.js",
         "build:es-lib": "tsc -p ./tsconfig.es.json",
         "build:cjs-lib": "tsc -p ./tsconfig.cjs.json"
     },
